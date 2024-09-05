@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ voltage-3col - process comma separated hex variables.
+            time, type (23), channel << 24 | value & 00FFFFFF;
+*/
+
+class ProcCsv {
+
+    function main($argv, $argc) {
+        $ctime = 0;
+        $type = 0;
+        $temppres = 0;
+        print("Date VoltageA VoltageB\n");
+        while ($str = fgets(STDIN)) {
+            if (list($s1, $s2, $s3) = explode(',', $str)) {
+                $ctime = hexdec($s1);
+                $type = hexdec($s2);
+                $temppres = hexdec($s3);
+                $chan = $temppres >> 24;
+                $temppres &= 0x00ffffff;
+                switch ($type) {
+                case 0x23:
+                    if ($chan == 0) {
+                        $val1 = $temppres * 2.5 / 16777216;
+                    } else {
+                        $val2 = $temppres * 2.5 / 16777216;
+                        printf("%d %2.6f %2.6f\n", $ctime, $val1, $val2);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv;
+$foo->main($argv, $argc);
+?>

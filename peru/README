@@ -1,0 +1,19 @@
+Peru is an application for the ATmega328P microcontroller.
+
+Peru manages a Velleman VMA437 OLED display connected via SPI.
+Peru is connected to other mpus via the TWI. There is no HC-05.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril peru
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and peru
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../peru && make avp)
+

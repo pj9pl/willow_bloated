@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+/* diagnose - hold a dialog with pisa.
+
+   usage: ./diagnose -f file -p /dev/rfcomm2 
+*/
+
+class Diagnose {
+
+    function main($argv, $argc, $envp) {
+        $filein = 0;
+        $fileout = STDOUT;
+        $portin = 0;
+        $portout = 0;
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portin = fopen($argv[$i + 1], "r");
+                        $portout = fopen($argv[$i + 1], "w");
+                    }
+                }
+                if ($argv[$i] == "-f") {
+                    if ($i < $argc) {
+                        $filein = fopen($argv[$i + 1], "r");
+                    }
+                }
+            }
+        }
+        if ($filein && $portin && $portout) { 
+            while ($line = fgets($file)) {
+                fputs($portout, $line);
+                $response = rtrim(fgets($portin));
+                print($response);
+                if (strcmp($response, "."))
+                    break;
+            }
+            fclose($filein);
+            fclose($portin);
+            fclose($portout);
+            print("\n");
+        }
+    }
+}
+
+$foo = new Diagnose;
+$foo->main($argv, $argc, $_SERVER);
+?>

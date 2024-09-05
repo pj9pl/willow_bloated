@@ -1,0 +1,18 @@
+
+  SYSINIT
+
+  The SYSINIT task performs the startup initialization. The hardware is
+  configured then a list of tasks are each sent an INIT message.
+
+  Within the main() function, a list of config_XXX() functions,
+  The config_sysinit() function should be the first to be called in main(),
+  as this disables all peripherals prior to subsequent enabling.
+  Soft pullups are applied to unused pins.
+
+  The dynamic initialization is initiated by sending an INIT message to the
+  SYSINIT task prior to entering the main loop. This in turn sends an INIT
+  message to each task listed in its init table, which places each network
+  secretary into the twi pool so that remote requests can be serviced.
+
+  The sysinit task is unusual in that the state variable is not an enum,
+  but an index into a table.

@@ -1,0 +1,46 @@
+#---------------------------------------
+# write CHANNEL_0 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x09,0x8191
+#--------------------------------------
+# perform internal zero scale calibration
+# write ADC_CONTROL [p.80] with:-
+#   midpower
+#   internal zero scale
+#   internal clk 
+W,0x01,0x0054
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# write CHANNEL_1
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0D << 5)  = 0x01A0 (decimal 13) pin Ain13,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x0A,0x81B1
+#--------------------------------------
+# write CHANNEL_2
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0E << 5)  = 0x01C0 (decimal 14) pin Ain14,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x0B,0x81D1
+#--------------------------------------
+# write CHANNEL_3
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0F << 5)  = 0x01E0 (decimal 15) pin Ain15,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x0C,0x81F1
+#--------------------------------------
+# write CONFIG_0 [p.90] with:-
+#   AIN_BUFP = (0x01 << 6)  = 0x0040
+W,0x19,0x0040
+#--------------------------------------
+# write FILTER_0
+W,0x21,0x800080
+#--------------------------------------

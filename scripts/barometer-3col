@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ barometer-3col - process comma separated hex variables.
+            time, type (6), temperature << 22 | pressure & 0x003FFFFF
+            input:  61EEA2D1,06,2E019427
+          or, since September 12th 2022:-
+            time, type (9), temperature << 18 | pressure & 0x003FFFFF
+            input:  be,63400997,09,1F9D8E8E
+
+            output:-
+                    Date Temperature Pressure
+                    1644115746 66.38 29.849
+
+     usage: grep -E ^be,[[:xdigit:]]{8},[[:xdigit:]]{2},[[:xdigit:]]{8}$ \
+                 `ls -rt ../tmp/maple*|tail -1`|cut -c2- | \
+                 cat ../legacy/BMP180-feb-may-2022 - |sort|uniq|barometer-3col
+*/
+
+class ProcCsv {
+
+    function main($argv, $argc) {
+        $ctime = 0;
+        $type = 0;
+        $temppres = 0;
+        $units = 1; /* 0= C and millibars, 1= F and inHg. */ 
+        print("Date Temperature Pressure\n");
+        while ($str = fgets(STDIN)) {
+            if (list($s1, $s2, $s3) = explode(',', $str)) {
+                $ctime = hexdec($s1);
+                $type = hexdec($s2);
+                $temppres = hexdec($s3);
+                switch ($type) {
+                case 6:
+                    printf("%d ", $ctime);
+                    if ($units) {
+                        printf("%.2f ", ($temppres >> 22) * 0.18 + 32);
+                        printf("%.3f\n", ($temppres & 0x003FFFFF) /
+                                                             3386.3886666667);
+                    } else {
+                        printf("%.2f ", ($temppres >> 22) / 10.0);
+                        printf("%.3f\n", ($temppres & 0x003FFFFF) / 100.0);
+                    }
+                    break;
+
+                case 9:
+                    printf("%d ", $ctime);
+                    if ($units) {
+                        printf("%.2f ", ($temppres >> 18) * 0.018 + 32);
+                        printf("%.3f\n", ($temppres & 0x0003FFFF) / 
+                                                            3386.3886666667);
+                    } else {
+                        printf("%.2f ", ($temppres >> 18) / 100.0);
+                        printf("%.3f\n", ($temppres & 0x0003FFFF) / 100.0);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv;
+$foo->main($argv, $argc);
+?>

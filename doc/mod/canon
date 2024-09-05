@@ -1,0 +1,6 @@
+
+  CANON
+
+  The CANON task is a line aggregator. It reads characters from the serial
+  input and stores them in a buffer. When a newline is received, the buffer
+  is sent to the to CLI.

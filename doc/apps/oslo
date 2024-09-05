@@ -1,0 +1,12 @@
+
+  OSLO
+
+  Oslo is a host at i2c address 0x34,0x35 (52,53 decimal).
+
+  It manages an SD-HC card, a 32768 crystal and a voltage input
+  on ADC channel 0. The attenuator feeding ADC0 divides by 6.75,
+  which is approximately -16.5 dB.
+
+  It uses the internal 8MHz clock.
+  The low fuse is programmed to 0xE2.
+

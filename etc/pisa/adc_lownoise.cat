@@ -1,0 +1,37 @@
+# script to configure Pisa for
+# noise on channel 0.
+# This gives a conversion rate
+# of 0.143 Hz. Every 6.25 seconds.
+# start with a reset so we know where we are.
+R
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#  REF_EN      = (0x01 << 8)  = 0x0100, 
+#  MID_POWER   = (0x01 << 6)  = 0x0040,
+#  CONTINUOUS_CONVERSION = (0x00 << 2) = 0x0000,
+#  INTERNAL_CLK= (0x00 << 0)  = 0x0000.
+# 
+# This gives a low noise level.
+:y010140;
+:y1909f0;
+:y218607FF;
+# Read from the cache
+#t
+# read it back with
+#1r
+#25r
+#33r
+# Read from the device
+#T
+# Sync the cache with the device
+S
+# Read Control register
+#1r
+# Read Config 0 register
+#25r
+# Read Filter 0 register
+#33r
+# Read Offset 0 register
+#41r
+# Read Gain 0 register
+#49r
+# 

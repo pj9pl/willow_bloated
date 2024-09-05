@@ -1,0 +1,8 @@
+#!/bin/sh
+# makehist - make a histogram from standard input.
+# usage: ./makehist <infile >outfile
+sort -n |uniq -c |sort -n >both
+cut -c-7 both >righth
+cut -c9- both >lefth
+paste lefth righth|sort -n 
+rm -f lefth righth both

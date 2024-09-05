@@ -1,0 +1,9 @@
+
+  BIGFONT
+
+  The OLED screens can display 10x14 numbers. Each character requires 20 bytes
+  of flash ram.
+
+  The font field in the oled_info struct specifies either SMALLFONT or BIGFONT.
+  e.g.
+    voltagev.oled.u.charray.font = BIGFONT;

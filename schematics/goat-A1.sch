@@ -1,0 +1,11 @@
+v 20130925 2
+C 40000 40000 0 0 0 title-bordered-A1.sym
+C 55000 49000 1 0 0 ATmega328_DIP.sym
+{
+T 57400 54900 5 10 1 1 0 6 1
+refdes=U?
+T 55400 55050 5 10 0 0 0 0 1
+device=Atmega328
+T 55400 55250 5 10 0 0 0 0 1
+footprint=DIP28
+}

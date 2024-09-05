@@ -1,0 +1,14 @@
+
+  SYSCON
+
+  The SYSCON task is a network secretary that receives SYSCON_REQUEST messages.
+
+  Each host has to respond to a REBOOT request.
+
+  SYSCON_REQUEST operations:- 
+
+    OP_REBOOT
+    OP_CYCLES
+    OP_RESET
+    OP_BOOTTIME
+

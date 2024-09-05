@@ -1,0 +1,19 @@
+Lima is an application for the ATmega328P mpu.
+
+It manages an OLED display and is connected to other mpus via the TWI.
+There is no HC-05 serial interface. Twiboot is used for reprogramming.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril lima
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and lima
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../lima && make avp)
+

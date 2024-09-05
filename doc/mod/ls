@@ -1,0 +1,19 @@
+
+  LS
+
+  The LS task is a utility that lists the items in the file system hierarchy.
+
+  It is situated on iowa and is accessed via the FSU DO_LS request.
+  The FSU pulls the argument string from bali's cli into a buffer and
+  presents a tokenized representation of it to ls in its info structure.
+
+  Usage:-
+
+      ls [-ail] [item] ...
+
+  The flags consist of:-
+
+      -a   print all items including . and ..
+      -i   print inode number
+      -l   long form
+

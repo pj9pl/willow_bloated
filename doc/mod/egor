@@ -1,0 +1,42 @@
+
+  EGOR
+
+  The EGOR task is an iterative process director. It reads measurement data
+  from ALBA and sends it to various destinations. It accepts START and STOP
+  messages, a destination selection message, and a loop count message.
+  The ALBA setup number is incorporated into the measurement data for some
+  destinations.
+
+  The '<n> j' command sends the START (1j) and STOP (0j) messages to EGOR. 
+  The measurement data consists of a 24-bit value, a 4-bit channel number
+  and an 8-bit setup number. The complete measurement data is contained in
+  a 5-byte structure.
+
+  The data can be logged to a file on the oslo file system.
+  This is controlled by the '<n> l' command, where <n> = [0..1].
+  This has the effect of 0l = disable logging and 1l = enable logging.
+  The data forms part of a 24-byte record in the file group egor[1..4].
+
+  An additional destination can be set with the '<n> h' command, one of:-
+     0h off
+     1h VOLTAGEZ (sumo)
+     3h OSTREAM  (peru)
+     4h OSTREAM  (bali)
+     5h VOLTAGEP (peru)
+     7h GC       (peru,sumo)
+
+  The loop count can be set with the '<n> r' command, where <n> = [0..65535].
+  A value of 0 produces an infinite loop.
+
+  A START message for a finite loop sends a reply when the loop count has
+  been completed whereas for an infinite loop a reply is sent before the
+  loop commences. This is because an infinite loop can only be stopped by
+  a STOP message which would send its own reply. A STOP message to a finite
+  loop is an unresolved anomaly. Currently, the reply is sent to the sender
+  of the STOP message.
+  
+  The ALBA setup is controlled by the '<n> i' command, where <n> = [0..4].
+  . output mtype can be set with:-
+    send_SET_IOCTL(EGOR, SIOC_LOAD_PATCH, val);
+  where val is in the range [32..36].
+

@@ -1,0 +1,11 @@
+v 20130925 2
+C 40000 40000 0 0 0 title-B.sym
+C 47200 42900 1 0 0 ATmega328_DIP.sym
+{
+T 49600 48800 5 10 1 1 0 6 1
+refdes=U?
+T 47600 48950 5 10 0 0 0 0 1
+device=Atmega328
+T 47600 49150 5 10 0 0 0 0 1
+footprint=DIP28
+}

@@ -1,0 +1,14 @@
+# salter-bridge-standby.goo
+#
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#   MID_POWER    = (0x01 << 6) = 0x0040,
+#   STANDBY      = (0x02 << 2) = 0x0008,
+#   INTERNAL_CLK = (0x00 << 0) = 0x0000.
+:y010048;
+#
+#----------------------------------------
+# write IO_CONTROL_1 [p.82] with:-
+#   PDSW open = (0x00 << 15)    = 0x000000,
+:y03000000;
+#
+

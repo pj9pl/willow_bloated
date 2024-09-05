@@ -1,0 +1,23 @@
+
+  OLED
+
+  The OLED task is a jobbing server that manages an OLED display device.
+  Two slightly different devices are implemented by iota.c and viola.c which
+  provide a generic OLED interface.
+
+  It is defined in [app]/host.h:-
+
+    typedef enum {
+        ...
+        OLED,
+        ...
+    } __attribute__((packed)) ProcNumber;
+
+  and the association is made with the actual server in [app]/main.c:-
+
+    static const MsgProc __flash proctab[] = {
+        ...
+        [OLED] = process_viola,         /* generic */
+        ...
+    };
+

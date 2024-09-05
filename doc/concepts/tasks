@@ -1,0 +1,195 @@
+
+  TASKS
+
+  A task is a message passing finite state machine, a unit of execution.
+  A task is a message processor. All actions are initiated by the reception
+  of a message. A task performs an operation in stages. Each stage performs
+  one or more actions. A stage usually generates one or more messages.
+
+  A task exports a receive function to the main function. All receive functions
+  are held in an array indexed by task ID. The main function extracts a message
+  from the fifo and delivers it to the receive function of the destination task
+  via the receive function array.
+
+  The receive function is only visible to the main function. A task may not
+  call the receive function of another task. 
+
+  A task may hold private data.
+
+  A private state variable determines where the task will resume, which is
+  analogous to a program counter. All persistant variables are declared in
+  the heap. 
+  
+  Ideally, a task should know of other modules only by their ID,
+  and operate entirely on messages. This maintains the privacy of
+  the module. There are exceptions, for example tty_putc() and get_utc().
+
+  A task header consists of two sections, delimited by the _MAIN_ definition.
+  The symbol _MAIN_ is only defined in the main.c file, and exposes one or
+  two function declarations. These are the receive_XXX() and config_XXX()
+  functions. Every task declares a receive_XXX() function, whereas a
+  config_XXX() function is declared only where a pre-start hardware
+  configuration is required.
+
+  The section visible where _MAIN_ is not defined contains the details
+  required by tasks that seek to use the facilities.
+  These include, where applicable, the info structure and pertintent
+  definitions.
+
+  ---
+
+  A task body consists of three sections:-
+
+     definition:  'I am ..'
+
+         This section sets the identity with two definitions:-
+
+         #define SELF ...
+         #define this ...
+
+         'SELF' is defined to a label enumerated in [app]/host.h.
+             Each task has a non-zero ID with which messages can be addressed.
+
+             The value ANY is always zero, and is used by a network secretary
+             to indicate that the secretary is willing to receive a request
+             from any task, thereby providing a service. When the task is ANY
+             the jobref value is ignored.
+
+             A client waiting for a reply specifies its own task ID and jobref.
+             A combined TWI transaction does not need a matching jobref, as the
+             reply is atomic with the request transaction, but a task number is
+             still required in order to represent the ANY value.
+
+             The SELF definition is used by the send_XXXX() convenience
+             macros in sys/msg.h. The enumeration of the task IDs as a
+             consecutive number sequence provides a fully populated look-up
+             table of function pointers in the main() function.
+
+             The ID label may not necessarily match the task name, as a
+             generic label allows similar tasks to provide a generic service,
+             otherwise each server would require its own group of bespoke
+             clients.
+
+         'this' is defined to the actual label of the private storage that will
+             appear in the bss section of the *.lst file.
+
+         The private storage is defined here.
+
+         The state variable indicates where to resume when a reply is
+         received.
+
+         The state variable has an IDLE state with a value of zero.
+         An elevated state indicates that an operation is in progress. 
+
+         The states are enumerated using verbs in the present progressive
+         tense with an objective as in (I am) IDLE, POWERING_ON, ...,
+
+    declaration:  'I have ..'
+
+         Variables are declared using nouns.
+
+         The private storage is declared here.
+
+    implementation:  'I can ..'
+
+         Functions are implemented using verbs.
+
+         Each task implements a receive function. This should return EOK
+         if the message is recognized, and ENOMSG if it is not.
+
+         A config function may be implemented where hardware needs to be
+         configured following a reset. This is called once from the main
+         function during initialization.
+
+  Task categories
+
+     There are many tasks that share common features, and that perform similar
+     roles. The network secretary is quite different to the jobbing server.
+
+     -  A PROCESS DIRECTOR is a top level client that generally performs an
+        iterative operation such as reading a sensor and writing to an output
+        destination. It would commonly receive START and STOP messages and
+        perhaps a SET_IOCTL message where parameters can be adjusted.
+
+        The TPLOG task is a typical process director.
+
+     -  A NETWORK SECRETARY provides a service via the TWI. It is registered
+        to receive a request or notification by the SYSINIT task. 
+
+        The three types of network secretary are:-
+
+          1. combined transaction e.g. UTC, MEMZ. 
+
+          2. notification e.g. BARP, BARZ, DATEP, DATEZ, VITP, VITZ, BATTERYZ,
+             PRESSUREZ, TEMPERATUREZ, VOLTAGEP, VOLTAGEZ, TIMZ.
+
+          3. peer e.g. FSU, FSD, RWR, MEMP, SETUPD, BC4, KEYSEC, ISTREAM,
+             OSTREAM, CONSOLE, OSETUP, SYSCON.
+
+     -  A JOBBING SERVER receives a JOB request from a client that references
+        an info structure containing arbitrary data for the operation.
+
+        When a JOB request is received, if the queue is empty the info is
+        set to the head and the operation is started directly. Otherwise
+        the job is postponed until the current job has been completed
+        and the queue head has been advanced, revealing the next info,
+        whereupon start_job() is called to commence the operation.
+
+        The info structure is defined by the server and declared by the client.
+        The info structure enables arbitrary data exchange without replication.
+        The info is shared by the client with the server.
+        The client should not access the info from the point where it is sent
+        to the point where a REPLY_INFO containing a reference to it is
+        received, when the server has discarded any association to it.
+
+        A client declares an info structure for each subordinate service
+        that it uses. Where these services are consecutive the structures may
+        be declared as members of a union. This minimises the required storage
+        to that of the largest type. An additional benefit of the union is the
+        visual clue in the namespace. It is quite normal for a union to
+        contain a single info structure simply to identify it as such.
+
+        The info reference is returned to the client in a REPLY_INFO which
+        identifies the job that has been completed.
+        
+     -  Producers and consumers are tasks with a particular interface.
+        
+        A producer notifies a consumer with a NOT_EMPTY message whenever it
+        inserts a byte into an empty buffer. This message carries a function
+        pointer which the consumer uses to read each byte.
+        The function returns EOK if a character has been obtained, otherwise
+        EWOULDBLOCK is returned, indicating the buffer is empty.
+        The producer sends a note-to-self when the consumer reads the final
+        byte.
+
+        The SER and ISTREAM tasks are example producers. 
+
+        A consumer receives a NOT_EMPTY message containing a function pointer
+        with which successive characters can be extracted from a producer's
+        buffer whilst there are bytes available, during which it returns EOK.
+        When the buffer is empty, Subsequent reads return EWOULDBLOCK.
+
+        A consumer must continue to read bytes until the buffer is empty, as
+        another NOT_EMPTY message cannot be generated until it the buffer count
+        is incremented from 0 to 1.
+
+        The INP and CANON tasks are example consumers..
+
+     -  An AGENT is dedicated subordinate. The CREATE and DELETE are agents
+        of FSD.
+
+    ------
+
+  Dynamic storage
+
+        Tasks can be categorized into permanent and occasional.
+
+        Permanent tasks maintain their state between requests and their
+        private storage must persist. The TWI task and the network secretaries
+        are examples of permanent tasks.
+
+        Occasional tasks do not maintain state between requests and can
+        allocate their private storage on demand. This allows many more tasks
+        to exist than would otherwise be the case. The ISP, ICSP and many file
+        system utilities are examples of occasional tasks.
+

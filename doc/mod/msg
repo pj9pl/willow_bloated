@@ -1,0 +1,12 @@
+
+  MSG
+
+  The MSG module declares the central fifo buffer through which all internal
+  messages flow. A message is eight bytes long. A message is inserted into
+  the buffer via one of five send_m?() functions, and extracted using the
+  extract_msg() function.
+
+  To dump the SRAM out of the USART0 peripheral if the Watchdog timer expires,
+  #define WDT_DUMP 1
+  in [app]/host.h.
+

@@ -1,0 +1,34 @@
+
+  ALBA
+
+  The ALBA task is an SPI driver for an AD7124-8 device.
+
+  In addition to JOB requests, A client may send a RDY_REQUEST message
+  to be informed by an ADC_RDY reply when the MISO/RDY pin goes low.
+
+  This can operate on one register per job.
+
+  This can perform big-endian translation on read and write.
+
+  There are four modes.
+
+      RESET MODE
+          This does not require a register number or a value.
+
+      READ MODE
+          This accepts a single register number and sends the little endian
+          value in the reply.
+
+          Note that a READ of the the data register is deferred until the
+          end of conversion.
+
+
+      WRITE MODE
+          This accepts a register number and a little endian value.
+
+      BUFFERED MODE
+          This accepts a buffer and a length. The buffer should contain
+          the comms byte followed by the register value, which can be
+          repeated as required, indicated by the length. The values are
+          big endian.
+

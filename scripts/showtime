@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ showtime - print the current oslo UTC 
+
+        usage:  showtime >$port
+*/
+
+class Showtime {
+
+    function main($argv, $argc) {
+        $prev = time();
+        while (1) {
+            $now = time();
+            if ($prev != $now) {
+                echo "now\n";
+                $prev = $now;
+            }
+        }
+    }
+}
+
+$foo = new Showtime;
+$foo->main($argv, $argc);
+?>

@@ -1,0 +1,5 @@
+
+  VITP
+
+  The VITP task is a network secretary that receives VITZ_NOTIFY messages
+  and sends a printed representation to an OLED device.

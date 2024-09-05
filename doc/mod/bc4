@@ -1,0 +1,10 @@
+
+  BC4
+
+  The BC4 task is a network secretary that manages a BC417 HC-05 Bluetooth
+  adapter. It provides a HC05 client interface.
+
+  It accepts three CLI commands:-
+   - hc05 <host> on      - enable adapter
+   - hc05 <host> off     - disable adapter
+   - hc05 <host>         - status: 32 = enabled; 40 = enabled + connected

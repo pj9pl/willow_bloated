@@ -1,0 +1,29 @@
+Fido is an Willow application for the ATmega328P.
+
+It is configured as an internal host connected by the TWI.
+The USART0 serial port is not connected.
+
+It hosts TPLOG which periodicly reads a BMP180 and logs the measurements.
+
+It hosts KEYPAD which manages a group of 8 touch switches.
+
+It hosts RTC which manages the RV-3027-C7 utilities and admin.
+
+It is connected to other hosts via the TWI.
+There is no HC-05 serial interface.
+It is reprogrammed using bali as a twiboot proxy.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril fido
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and fido
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../fido && make avp)
+

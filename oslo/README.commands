@@ -1,0 +1,10 @@
+# oslo/README.commands
+
+c : print cycle count and message fifo high water.
+
+e : print build ident
+
+0z : TTY output to local SER
+1z : TTY output to GATEWAY OSTREAM
+2z : TTY output to TWI_OLED_HOST OSTREAM
+3z : TTY output to SPI_OLED_HOST OSTREAM

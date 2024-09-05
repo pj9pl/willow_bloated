@@ -1,0 +1,8 @@
+
+  SCAN
+
+  The SCAN task resolves an item name to an inode number. If it is found,
+  the scan_info contains the inode number and the index of the item within
+  the directory. If it is not found, the scan_info inode number is set to
+  INVALID_INODE_NR and the dirent index is meaningless.
+

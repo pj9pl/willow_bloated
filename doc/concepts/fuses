@@ -1,0 +1,60 @@
+
+  FUSES
+
+  The fuse byte values for the ATmega328P [p.290-3]
+  that are used in this project are:-
+
+     Extended : 0xFF
+          1 
+          1 
+          1
+          1
+          1
+          1  \
+          1   | Brown-out detector disabled.
+          1  /
+
+  The twiboot bootloader can fit into a 1K bootsize.
+     High : 0xDC
+          1  enable external reset
+          1  disable debugWIRE
+          0  enable serial programming
+          1  watchdog timer off by default
+          1  EEPROM memory not preserved through chip erase
+          1  \ 1k bootloader size: bootloader to be linked at 0x7C00.
+          0  /
+          0  select boot reset vector - Boot from 0x7C00
+
+  The optiboot bootloader can fit into a 512 byte bootsize.
+     High : 0xDE
+          1  enable external reset
+          1  disable debugWIRE
+          0  enable serial programming
+          1  watchdog timer off by default
+          1  EEPROM memory not preserved through chip erase
+          1  \ 512 byte bootloader size: bootloader to be linked at 0x7E00.
+          1  /
+          0  select boot reset vector - Boot from 0x7E00
+
+  The internal 8MHz RC oscillator
+     Low : 0xE2
+          1  undivided clock
+          1  no clock output
+          1  \ start-up time for slowly rising power
+          0  /
+          0  \
+          0   \  Internal RC oscillator
+          1   / 
+          0  /
+
+  An external 11.06 MHz ceramic resonator (ZTT 11.06MT)
+     Low : 0xCF
+          1  undivided clock
+          1  no clock output
+          0  \ start-up time for slowly rising power
+          0  /
+          1  \
+          1   \  Low Power Crystal Oscillator 8.0 - 16.0 MHz
+          1   / 
+          1  /
+

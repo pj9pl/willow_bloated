@@ -1,0 +1,23 @@
+# script to configure the Octopus for two channels.
+#
+# start with a reset.
+R
+#
+# read STATUS_REGISTER to clear the POR_FLAG
+0r
+#
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#                 DATA_STATUS = (0x01 << 10) = 0x0400, 
+#                 REF_EN      = (0x01 << 8)  = 0x0100, 
+#                 FULL_POWER  = (0x02 << 6)  = 0x0080,
+#                 CONTINUOUS_CONVERSION = (0x00 << 2) = 0x0000,
+#                 INTERNAL_CLK= (0x00 << 0)  = 0x0000.
+:y010180;
+#
+# write CONFIG_0 BIPOLAR|REF_BUFP|REF_BUFM|AIN_BUFP|AIN_BUFM|INTERNAL
+:y1909f0;
+#
+#
+# write FILTER_0 [p.91] with POST_FILTER=011, FS=0x780 (decimal 1920)
+:y21860780;
+#

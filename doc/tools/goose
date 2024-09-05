@@ -1,0 +1,7 @@
+
+  GOOSE
+
+  Goose is a php script used to feed pisa with lines of text, one per second.
+
+  Example:-
+    goose < diagnosis-1.goo |tee $port

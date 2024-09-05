@@ -1,0 +1,16 @@
+
+  BOOTLOADERS
+
+  The three bootloaders that accompany this project are derived from external
+  sources. Each has been modified but retain their original ownership and
+  copyright.
+
+  bootloader/ATmegaBOOT_willow.c - derived from:-
+       savannah/ArduinoCore-avr/bootloaders/atmega/ATmegaBOOT_168.c
+
+  optiboot/optiboot.c - derived from:-
+       savannah/ArduinoCore-avr/bootloaders/optiboot/optiboot.c
+
+  twiboot/twiboot.c - derived from:-
+       github.com/orempel/twiboot/main.c
+       by Olaf Rempel - razzor@kopf-tisch.de                 

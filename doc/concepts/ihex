@@ -1,0 +1,130 @@
+
+  IHEX
+
+  The Intel Hex Format records that are recognised by ISP, ICSP and HVPP.
+
+  See also:-
+  Intel Hexadecimal Object File Format Specification Rev.A 1/6/88 [Hexfrmt.pdf]
+  Philips P89C51RC+ Product Specification [P89C51RC+IN.pdf p.43-4]
+
+  00 Program Data
+      :nnaaaa00dd....ddcc
+      Where
+         nn       = number of data bytes in record
+         00       = "Program Data" command
+         aaaa     = memory address of first byte in record
+         dd....dd = data bytes
+         cc       = checksum
+
+      Example:
+         :103C00000102030405060708090A0B0C0D0E0FC4
+
+  01 End of File (EOF), no operation
+      :00xxxx01cc
+      Where
+          00   = number of data bytes in record
+          xxxx = don't care
+          cc   = checksum
+
+     Example:
+          :00000001FF
+
+  04 EXTENDED LINEAR ADDRESS, 0x0081 equates to EEPROM segment
+      :02xxxx04aaaacc
+      Where
+          02   = number of data bytes in record
+          aaaa = Upper linear base address.
+
+      Example:
+          :02000004008179    Set the EEPROM segment
+
+  06 Miscellaneous Write Functions
+      :03xxxx06ffssddcc
+      Where
+          03   = number of data bytes in record
+          xxxx = don't care
+          06   = "Miscellaneous Write" function code
+          ff   = subfunction code
+          ss   = selection code
+          dd   = data input
+          cc   = checksum
+
+      Subfunction Code = 04 (Program lockbits/fuses)
+          ff   = 04 (Program lockbits/fuses)
+          ss   = Byte code 
+                   0 = lockbits
+                   1 = low fuse
+                   2 = high fuse
+                   3 = extended fuse
+          dd   = data
+
+      Examples:
+             :030000060401E210    program low fuse with E2
+                                  sets the 8 MHz RC internal oscillator
+
+             :030000060401CF23    program low fuse with CF
+                                  sets the 11.06 MHz external oscillator
+
+             :030000060402DA17    program high fuse with DA
+                                  sets the 1K byte bootloader
+
+             :030000060402DC15    program high fuse with DC 
+                                  sets the 512 byte bootloader
+
+  07 Read Data
+      :05xxxx07sssseeeeffcc
+      Where
+          05   = number of data bytes in record
+          xxxx = don't care.
+          07   = "Read Data" function code
+          ssss = start address
+          eeee = end address
+          ff   = subfunction code
+                   00 = display data
+                   01 = blank check
+          cc   = checksum
+
+      Examples:
+          :0500000700007FFF0076   display data from 0000 to 7FFF
+          :0500000700007FFF0175   blank check from 0000 to 7FFF
+
+  08 Miscellaneous Read Functions
+      :02xxxx08ffsscc
+      Where
+          02   = number of data bytes in record
+          xxxx = don't care
+          08   = "Miscellaneous Read" function code
+          ffss = subfunction and selection code
+                   0000 = read signature 0
+                   0001 = read signature 1
+                   0002 = read signature 2
+                   0003 = read calibration byte
+                   0700 = read lockbits
+                   0701 = read low fuse
+                   0702 = read high fuse
+                   0703 = read extended fuse
+          cc   = checksum
+
+      Examples:
+          :020000080000F6   read signature 0
+          :020000080001F5   read signature 1
+          :020000080002F4   read signature 2
+          :020000080003F3   read calibration byte
+          :020000080700EF   read lockbits
+          :020000080701EE   read low fuse
+          :020000080702ED   read high fuse
+          :020000080703EC   read extended fuse
+
+  09 Erase Function
+      :02xxxx09ffsscc
+      Where
+          02   = number of data bytes in record
+          xxxx = don't care.
+          09   = Erase function code
+          ffss = subfunction and selection code
+                   0302 = Erase chip.
+          cc   = checksum
+
+      Example:
+          :020000090302F0   erase chip
+

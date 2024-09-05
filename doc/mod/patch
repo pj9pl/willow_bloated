@@ -1,0 +1,38 @@
+
+  PATCH
+
+  The PATCH task is a jobbing server that configures the alba subsystem from
+  a config file. It receives an inode number of a text file which is executed
+  one line at a time.
+
+  The recognised commands are:-
+
+  #                     comment 
+  A, <contrast>       Oled: contrast [0..255]
+  B, <display>        Oled: display 0 = off, 1 = on, 2 = clear
+  C  -                  wait for the AD7124 to accept a command.
+  E, <x>, <y>, <w>, <h>, <rop>, <inh>  Oled: draw rect
+  I  -                  initialize the AD7124
+  J, <stop/start>     Egor: 0 = STOP, 1 = START
+  L, <loop count>     Egor: 0 = infinite, [1..n] = finite
+  M, <chan>, <ee>, <val>, <inh>, <ref>, <pm>, <ga> : MCP4728 parameters
+  N, <x1>, <y1>, <x2>, <y2>, <rop>, <inh>   Oled: draw line
+  O, <destination>    Egor: 0 = off, 1 = LCD, 3 = OLED, 4 = GATEWAY
+  P, <origin>         Oled: origin 0 = bottom, 1 = top, 2 = left, 3 = right
+  R, <regno>            read AD7124 register <regno>
+  S, <linestart>      Oled: linestart [0..63]
+  T, <x>, <y>, <rop>, <inh>, <text>  Oled: draw text <rop> [1..2]; <inh> [0..1]
+  V, <display mode>   Egor: 0,3=bipolar, 1,2,4=unipolar, 0,2,4=big, 1,3=small 
+  W, <regno>, <value>   write <value> to AD7124 register <regno>
+
+  Patch can be accessed in three ways:-
+
+   - The 'alba <path>' CLI command.
+       If running patch fails, the offending line number is reported along
+       the error code, for example (22,6) indicates EINVAL at line six.
+
+   - The 'inp pisa <nnn> i' CLI command, where <nnn> is the inode number
+     of the particular patch file.
+
+   - The keypad config files which binds a key transition to an alba file.
+

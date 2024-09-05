@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ printtime - print the current camel time 
+
+        usage:  printtime
+*/
+
+class Printtime {
+
+    function main($argv, $argc) {
+        $prev = time();
+        while (1) {
+            $now = time();
+            if ($prev != $now) {
+                echo $now . " ";
+                print(strftime("%F %T",$now) . "\n");
+                $prev = $now;
+            }
+        }
+    }
+}
+
+$foo = new Printtime;
+$foo->main($argv, $argc);
+?>

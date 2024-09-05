@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+/* loop - output a rising m and fallin n
+
+   usage: ./loop  
+
+*/
+
+class Loop {
+
+    function main($argv, $argc) {
+        print("j\n");
+        $naptime = 300000000;
+        for ($i = 0; $i < 4096; $i++) {
+            print($i . "o\n");
+            usleep(100000);
+            print("y\n");
+            usleep($naptime);
+        }
+        usleep(100000);
+        print("k\n");
+    }
+}
+
+$foo = new Loop;
+$foo->main($argv, $argc);
+?>
+

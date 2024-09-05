@@ -1,0 +1,28 @@
+
+  WILLOW
+
+    Willow is an application framework for the ATmega328P microcontroller.
+
+    It provides single-threaded cooperative multitasking based on message
+    passing finite state machines.
+ 
+    It consists of modules that each export a receive function which is
+    called from the main loop with a pointer to the message being delivered.
+
+    Cooperative multitasking is explicit, in that a task must yield after
+    sending a message in order for that message to be delivered.
+ 
+    There is no preemptive scheduling. Each task decides for itself how
+    long it will retain control of the application context.
+
+    Each message is processed to completion before the receive function
+    returns to the main loop.
+
+    The three kinds of message are request, reply and notification.
+    A request begets a reply.
+
+    A task can send a request knowing that a reply will be received later.
+    This enables a task to perform a given operation in stages, where each
+    stage performs an action and sends a message.  When a reply is received
+    the operation is resumed at a point determined by the state.
+

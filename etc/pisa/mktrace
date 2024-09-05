@@ -1,0 +1,5 @@
+#!/bin/sh
+# mktrace
+# usage: ./mktrace < file
+# egor:00,E8EEE8
+cut -d, -f2 - |./voltfilter |cut -d' ' -f3-

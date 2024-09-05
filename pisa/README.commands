@@ -1,0 +1,73 @@
+# pisa/README.commands
+
+:yRRxxxxxx; set register RR (in hex) value xx or xxxx or xxxxxx (in hex).
+       e.g.  reset the AD7124    :yffffffffffffffff;
+             enter standby mode  :y010010;
+             read ID register    :y4500;
+
+    # comment
+
+1B : SER set baudrate to 9600
+2B : SER set baudrate to 19200
+3B : SER set baudrate to 38400
+4B : SER set baudrate to 57600
+5B : SER set baudrate to 115200
+
+0C : SER set the consumer to INP
+1C : SER set the consumer to SERIN
+
+c : print cycle counts
+
+<nn> d : set EGOR display mode to nn
+
+e : print build ident
+
+0h : EGOR output OFF
+1h : EGOR send measurement to the VOLTAGEZ LCD secretary on sumo
+2h : EGOR send measurement to the VOLTAGEP @ TWI_OLED_ADDRESS
+3h : EGOR send measurement to the VOLTAGEP @ SPI_OLED_ADDRESS
+4h : EGOR send measurement to the OSTREAM @ GATEWAY 
+5h : EGOR send measurement to the OSTREAM @ TWI_OLED_ADDRESS
+6h : EGOR send measurement to the OSTREAM @ SPI_OLED_ADDRESS
+7h : EGOR send measurement to VOLTAGEx GENERAL CALL (lima,peru,sumo)
+
+0j : stop EGOR
+1j : start EGOR
+
+<nnn> K : EEX write external reference calibration value
+k : EEX read external reference calibration value
+
+0l : EGOR logging off
+1l : EGOR logging on
+
+<ch,ee,val,inh,ref,pm,ga> M : write to an MDAC channel where:-
+      ch  = [0..3] = [A, B, C, D]
+      ee  = [0..1] = [OUTPUT, EEPROM]
+      val = [0..4095] = VALUE
+      inh = [0..1] = [UPDATE, INHIBIT]
+      ref = [0..1] = [VDD_REFERENCE, INTERNAL_REFERENCE]
+      pm  = [0..3] = [NORMAL, OFF_1K, OFF_100K, OFF_500K]
+      ga  = [0..1] = [ZERO_DB, SIX_DB]
+
+<ch,ee> m : read from an MDAC channel where:-
+      ch  = [0..3] = [A, B, C, D]
+      ee  = [0..1] = [OUTPUT, EEPROM]
+
+1R : reset ALBA
+
+<nn> r : set EGOR loop count
+
+S : cancel a running stairs
+
+<ch,val,step,samples> s : run stairs where:-
+      ch      = [0..3]
+      val     = [0..4095]
+      step    = [0..255]
+      samples = [0..255]
+
+y : send SYNC to the MDAC to update the analog voltage outputs.
+
+0z : TTY output to local SER
+1z : TTY output to GATEWAY OSTREAM
+2z : TTY output to TWI_OLED_ADDRESS OSTREAM
+3z : TTY output to SPI_OLED_ADDRESS OSTREAM

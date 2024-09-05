@@ -1,0 +1,8 @@
+
+  TIME
+
+  The time of day is recorded by the RTC and the UTC.
+
+  The UTC is slower than the RTC and the relative temperature coefficient
+  also differs: when the temperature is lower, UTC slows down at a much
+  greater rate.

@@ -1,0 +1,5 @@
+
+  MK
+
+  The MK task is a file system utility that performs the create and mkdir
+  operations as the front end to the FSD MKNOD service.

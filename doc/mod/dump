@@ -1,0 +1,38 @@
+
+  DUMP
+
+  The DUMP task provides a remote memory dump service. It is an agent of CLI
+  and is called in response to the command:-
+
+        dump <host> [start_loc [+length | end_loc]]
+
+  Usage:
+
+      dump <host>
+      dump <host> <start_loc>
+      dump <host> <start_loc> <+length>
+      dump <host> <start_loc> <end_loc>
+
+  Dump the message buffer on fido specifying the length:-
+
+      dump fido 106 +48
+
+  or by specifying the end address:-
+
+      dump fido 106 14d
+
+  Note that the end_loc is inclusive. 
+
+  If the +length and end_loc are both absent, an implicit 8ff is assumed:-
+
+      dump fido 100
+
+  If the start_loc is also absent an implicit 0 is assumed:-
+
+      dump fido
+
+  Dumping the system registers may cause malfunction as some may be altered in
+  being read. The USART input data could be lost if the register is read by
+  MEMZ instead of SER. This is possible because MEMZ reads from within the
+  interrupt context.
+

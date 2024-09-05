@@ -1,0 +1,15 @@
+
+  KEYSEC
+
+  The KEYSEC task is a network secretary that receives a KEY_REQUEST 
+  OP_LOADKEY message from any task, which instructs KEYCONF to load a
+  particular key config file, specified by inode number.
+
+  When the reply from KEYCONF is received, KEYSEC sends a KEY_REPLY message
+  with the result and the number of lines processed to the HOST:TASK:JOB that
+  sent the KEY_REQUEST.
+
+  The key config files are stored in the /key directory. The file /key/basic
+  contains default settings. The CLI command 'key <path>' resolves the path
+  and sends KEYSEC a KEY_REQUEST OP_LOADKEY message with the inode number.
+

@@ -1,0 +1,7 @@
+
+  SETUPD
+
+  The SETUPD is a network secretary that accepts a SETUPD_REQUEST message
+  containing an inode number for an alba configuration file. This number
+  is sent to PATCH which loads the file into the alba subsystem.
+

@@ -1,0 +1,111 @@
+
+  REPROGRAMMING
+
+  Reprogramming the application section of an ATMega328P device is commonly
+  performed using avrdude(1). Whereas this method can be used for a device
+  with an external serial connection and optiboot, another method is used to
+  reprogram the internal devices that use twiboot.
+
+  EXTERNAL DEVICES
+
+  The bali device has an external serial connection and uses a modified version
+  of the optiboot bootloader that has no auto reset or timeout. Instead it
+  reads a bootloader switch and remains within the main loop until instructed
+  to exit.
+ 
+  To enter the bootloader, the bootloader switch should be closed and an
+  external reset should be applied by one of these three methods:-
+
+      - press the reset button
+      - in CLI mode, enter 'reboot self'
+      - in INP mode, enter 'q'
+
+  The application section can now be reprogrammed at leisure using avrdude(1).
+
+  Example:
+      From within the bali source directory:-
+      $ make flash
+
+  INTERNAL DEVICES
+
+  The internal devices use a modified version of the twiboot bootloader.
+  The modifications are similar to above in reading the bootloader switch
+  and remaining within the main loop until instructed to exit.
+
+  These devices use bali as a proxy to reprogram the application using
+  avril(1) or the complete image, fuses and lock bits using avp(1).
+
+  The ISP, ICSP and HVPP tasks accept Intel hex files with some limitations,
+  in that the length of each record must not exceed 16 data bytes and each
+  record must begin on a 16-byte boundary, to ensure that a record does not
+  straddle an SPM page boundary. 
+
+  Generating an Intel hex file directly from the elf file can produce records
+  that straddle an SPM page boundary, whereas if a Motorola S-record file is
+  generated from the elf file, and an Intel hex file is then generated from
+  the S-record file, the 16-byte alignment is maintained.
+ 
+  There are three methods available to reprogram the internal devices:-
+
+  1. In-system programming (ISP) uses avril(1) to reprogram the application
+     section only. The bootloader, fuses, lock bits, signature and calibration
+     bytes are not accessible via this method.
+
+     An application image is written to the flash memory. This image is
+     created using 'make' from within the target application directory.
+     It is named using the application name, for example fido.hex.
+
+     It is most important that the target device does not receive any other
+     network communications during the reprogramming operation, as this will
+     cause the operation to fail and require the use of the ICSP method.
+
+     Unless the flash memory is blank, the bootloader switch must be closed
+     in order to enter the bootloader.
+
+     Examples:
+         From within the bali source directory:-
+         $ avril fido
+
+         Multiple devices may be given:-
+         $ avril fido iowa oslo peru pisa goat
+
+  2. In-circuit serial programming (ICSP) uses avp(1) to reprogram the
+     entire flash memory, the fuses except SPIEN (High Fuse Byte, bit 0x20)
+     and the lock bits.
+
+     The ICSP task is hosted on both bali and iowa, and accessable via the 1L
+     INP command which enables iowa to reprogrammed by bali, and bali by iowa.
+     Neither bali nor iowa can reprogram itself.
+
+     The power must be removed before connecting or disconnecting the
+     ICSP cable.
+
+     A complete image is written to the flash memory. This image is created
+     using 'make image' from within the target application directory.
+
+     Examples:
+         From within the bali or iowa source directory:-
+         $ (cd ../fido && make avp)
+
+         To reprogram bali from within the iowa source directory:-
+         $ (cd ../bali && make avp)
+
+         To reprogram iowa from within the bali source directory:-
+         $ (cd ../iowa && make avp)
+
+  3. High voltage parallel programming (HVPP) uses avp(1) to reprogram the
+     entire flash memory, fuses and lock bits.
+
+     Only the DIP-28 packages are supported as the device must be removed from
+     its circuit and placed in a ZIF socket where the operation is performed.
+
+     In some cases this method may be able to recover a device which has been
+     bricked using the ICSP method.
+
+     A complete image is written to the flash memory. This image is created
+     using 'make image' from within the target application directory.
+
+     Example:
+         From within the goat source directory:-
+         $ (cd ../fido && make avp)
+

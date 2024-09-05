@@ -1,0 +1,17 @@
+
+  HOST_H
+
+  The [app]/host.h header file contains definitions specific to the
+  application. By its inclusion in sys/msg.h it is visible to all tasks.
+
+  It specifies which timer is to be used for the alarm clock (CLK) and
+  enumerats each task that is used by the app.
+
+  Where the USART0 baudrate is other than B9600, e.g. (pisa):-
+  #define DEFAULT_BAUDRATE B57600
+
+  To dump the SRAM out of the USART0 peripheral if the Watchdog timer
+  expires, #define WDT_DUMP to a non-zero value.
+
+  If the order of the ProcNumber enum matches that of the objects in
+  Makefile then the list-bss output will correlate with the task ID.

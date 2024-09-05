@@ -1,0 +1,26 @@
+
+  BCX
+
+   The BCX task is a Bluetooth BC417 HC-05 manager.
+
+   This driver manages three pins. Two inputs and one output.
+   PIND3 (#5) - input  low = disconnected, high = connected.
+   PIND4 (#6) - input  low = wake_up.
+   PIND5 (#11) - output  high == enabled, low == disabled.
+
+   Accepts status requests and produces a long reply containing the
+   enabled and connected status as bit 3 (connected) and bit 5 (enabled).
+
+   HC-05 adapters are a mixed bunch. Those that feature a BC352 don't respond
+   to a low level on the ENABLE input, whereas those that feature a BC417 do.
+
+   The current solution for BC352 adapters involves an external +5v VDD switch
+   using an IRF9530, a 2N7000 and a 33k resistor.
+
+   There are applications where disabling the HC-05 would be inappropriate.
+   There should be the means to prevent the HC-05 from being disabled.
+   The application can add -DHC_05_ALWAYS_ON to CFLAGS. This permits the
+   removal of the wake_up button and the enable output, freeing-up two pins in
+   the process. The HC-05 STATUS is enhanced, as it is now constant, and not
+   subject to the HC-05 ENABLE condition. A saving of 248 code bytes too.
+

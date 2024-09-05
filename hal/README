@@ -1,0 +1,7 @@
+avril is an AVR in-system programmer for updating internal hosts that use the
+twiboot bootloader. This program communicates with bali, as it is both the
+gateway and the twiboot proxy.
+
+rlcat is a readline interface for the sender terminal.
+
+avp is a programming tool for ICSP and HVPP tasks.

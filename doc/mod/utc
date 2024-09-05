@@ -1,0 +1,75 @@
+
+  UTC
+
+  The UTC task is network secretary that provides a UNIX timestamp and the
+  time of the last clock reset.
+ 
+  In addition it provides low latency access to the current time through a
+  PUBLIC get_utc() function.
+
+  It uses TIMER 2 in normal mode clocked from an external 32kHz watch crystal
+  to count the seconds since it was last reset [p.150].
+ 
+  The watch crystal is connected to Pins B6 (#9) and B7 (#10) with 18pf
+  ceramic capacitors to ground (#8).
+
+  The prescaler is set to divide by 128 which produces an overflow interrupt
+  at 1 second intervals. Each interrupt increments utc.uptime by 1.
+  The hardware counter provides ~3.9ms resolution (1/256).
+
+  To indicate the current time, the boottime is added to the uptime.
+
+  A current Unix timestamp is used to calculate the boottime from the uptime.
+
+ Example usage:
+
+ ...
+
+ #include <time.h>
+ #include "sys/utc.h"
+ #include "net/twi.h"
+ #include "net/i2c.h"
+
+
+ typedef struct {
+     ...
+     union {
+         utc_msg utc;
+         ...
+     } msg;
+     union {
+         twi_info twi;
+         ...
+     } info;
+     ...
+ } privatestorage_t;
+
+ static privatestorage_t this;
+
+ ...
+
+ PRIVATE void resume(void)
+ {
+    switch (this.state) {
+    ...
+    case CURRENT_STATE:
+        this.state = FETCHING_UTC;
+        this.msg.utc.request.taskid = SELF;
+        this.msg.utc.request.op = GET_TIME;
+        sae2_TWI_MTMR(this.info.twi, UTC_ADDRESS,
+            UTC_REQUEST, this.msg.utc, this.msg.utc);
+        break;
+
+    case FETCHING_UTC:
+        {
+            char store[26];
+            this.msg.utc.reply.val -= UNIX_OFFSET;
+            ctime_r(&this.msg.utc.reply.val, store); 
+            tty_puts(store);
+            ...
+        }
+        break;
+
+    ...
+    }
+ }

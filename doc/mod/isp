@@ -1,0 +1,27 @@
+
+  ISP
+
+  The ISP task is an in-system programmer acting as a twiboot proxy for
+  internal hosts. It is hosted on bali.
+
+  ISP accepts an aligned Intel hex file, in that each record up to the final
+  one contains 16 data btes. This alignment is achieved by using Motorola srec
+  as an intermediate format in the make process.
+
+  The native Intel format produced by avr-objcopy can contain a data record
+  which spans two SPM pages causing ISP to fail.
+
+  The host's bootloader switch must be closed for it to be reprogrammed using
+  avril.
+
+  The reprogramming may fail if the target receives a request from another
+  host during the operation.
+  
+  To reprogram peru from within the bali source directory, type:-
+
+  $ avril peru
+
+  Multiple hosts can be given to avril:-
+
+  $ avril fido iowa oslo peru pisa sumo
+

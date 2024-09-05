@@ -1,0 +1,26 @@
+
+  LOWLIGHTS
+
+  - The system can be halted by an aberrent task.
+
+  - It is neither object-oriented nor object based. Each task is primarily
+    referenced by a receive function rather than an instance of a class.
+
+  - It is non portable. The code has been developed using a number of
+    ATmega328P devices, and as a consequence is little-endian. It has
+    only been tested with ATmega328P devices. The third-party bootloaders
+    have been edited to remove conditional code for other devices, in the
+    interests of clarity.
+
+  - It only runs tasks. Aside from the main function, the message mechanism,
+    the stopwatch and the core dump module, everything is contained within
+    task modules. 
+
+  - The operation is not foolproof. There are many ways in which the unwary may
+    be thwarted. Reprogramming is one operation which is fraught with hazards,
+    and may surely fail if another device were to send the target a request
+    during the proceedings.
+
+  - Only 7-bit ASCII characters are supported. There is no provision for
+    Unicode or any other charsets. 
+

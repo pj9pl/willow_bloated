@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+/* Gramfilter - transform a count value into the corresponding
+                voltage according to the accumulation value.
+                usage: ./voltfilter [-b] <file.outf >file.vs
+                        -b don't show count value, just the voltage.
+*/
+
+class GramFilter {
+
+    function main($argv, $argc) {
+        $hexstr = "0";
+        $vval = 0;
+
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "%s", $hexstr) == 1) {
+                $vval = hexdec($hexstr);
+                print($vval . "\n");
+            }
+        }
+    }
+}
+
+$foo = new GramFilter;
+$foo->main($argv, $argc);
+?>

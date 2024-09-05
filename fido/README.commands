@@ -1,0 +1,82 @@
+# fido/README.commands
+
+<nnn> b : read KEYPAD
+
+c : print cycle count
+
+C : print calendar registers
+
+0d : disable Time Stamp
+1d : enable Time Stamp
+2d : print Time Stamp
+3d : clear Time Stamp
+4d : print Time Stamp status
+
+e : print build ident
+
+<nnn> F : set OSCCAL to nnn
+f : print OSCCAL
+
+1h : update UTC from UNIX TIME
+2h : update calendar registers from UNIX TIME
+
+0k : read RTC on the periodic time interrupt
+1k : read UTC on the periodic time interrupt
+
+0l : TPLOG send STOP
+1l : TPLOG send START
+
+1M : copy all configurable RV3028C7 registers to EEPROM
+
+n : print the UNIXTIME_REG on the RV3028C7
+<nnn> N : set the UNIXTIME_REG on the RV3028C7
+
+o : print the EEOFFSET_REG from the RV3028C7
+<nnn> O : set the EEOFFSET_REG on the RV3028C7
+
+p : print the EEPROM_BACKUP_REG from the RV3028C7
+<nnn> P : set the EEPROM_BACKUP_REG on the RV3028C7
+          16P = turn battery backup off (0x10).
+          20P = turn battery backup on  (0x14).
+
+<[-]nnn> R : set the EEOFFSET value to [-256..255]
+
+r : print the EEOFFSET value
+
+0s : TEMPEST send STOP
+1s : TEMPEST send START
+
+0S : TEMPEST output OFF
+1S : TEMPEST send output to SUMO
+2S : TEMPEST send output to JIRA
+3S : TEMPEST send output to PERU
+7S : TEMPEST send output to GCALL
+
+0t : TIMZ send STOP
+1t : TIMZ send START
+
+0T : TIMZ output OFF
+1T : TIMZ send output to SUMO
+2T : TIMZ send output to JIRA
+3T : TIMZ send output to PERU
+7T : TIMZ send output to GCALL
+
+0u : disable PERIODIC TIME INTERRUPT
+1u : enable PERIODIC TIME INTERRUPT - per second
+2u : enable PERIODIC TIME INTERRUPT - per minute
+3u : print UTC drift
+
+0v : VITZ send STOP message
+1v : VITZ send START message
+
+0V : VITZ output OFF
+1V : VITZ send output to SUMO
+2V : VITZ send output to JIRA
+3V : VITZ send output to PERU
+4V : VITZ send output to GCALL
+
+0z : TTY output to local SER
+1z : TTY output to GATEWAY OSTREAM
+2z : TTY output to TWI_OLED_HOST OSTREAM
+3z : TTY output to SPI_OLED_HOST OSTREAM
+

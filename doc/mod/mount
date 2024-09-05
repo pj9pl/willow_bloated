@@ -1,0 +1,9 @@
+
+  MOUNT
+
+  The MOUNT task mounts the first type 250 partition..
+
+  This task should check a little filesystem in a type 0xfa partition.
+  It is a client of the SSD module in its reading and writing of numbered
+  blocks. It builds an internal representation of the card, volume, partition,
+  root directory, path and file from numbered block reads and writes.

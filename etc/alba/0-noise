@@ -1,0 +1,47 @@
+# alba/0-noise - measure inherent system noise of ainp shorted to ainm
+#--------------------------------------
+# send STOP to EGOR
+J,0
+#--------------------------------------
+# reset AD7124
+I
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# read status register
+R,0x00
+#--------------------------------------
+# ADC_CONTROL_REGISTER: REF_EN, MID_POWER, STANDBY_MODE, INTERNAL_CLK
+W,0x01,0x0148
+#--------------------------------------
+# WRITING_CHANNEL_0: enable=TRUE, setup=0, ainp=0, ainm=1, 
+W,0x09,0x8001
+#--------------------------------------
+# write CONFIG_0 [p.90] with:-
+#   BIPOLAR  = (0x01 << 11) = 0x0800
+#   REF_BUFP = (0x01 << 8)  = 0x0100
+#   REF_BUFM = (0x01 << 7)  = 0x0080
+#   AIN_BUFP = (0x01 << 6)  = 0x0040
+#   AIN_BUFM = (0x01 << 5)  = 0x0020
+#   REFIN1   = (0x00 << 3)  = 0x0000
+#   PGA Gain = 1            = 0x0000
+W,0x19,0x09E0
+#--------------------------------------
+# ADC_CONTROL_REGISTER: REF_EN, MID_POWER, mode=IntOffCal, INTERNAL_CLK
+W,0x01,0x0154
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# Egor: loop count = 20
+L,20
+#--------------------------------------
+# Egor: display mode = bipolar, small 
+V,3
+#--------------------------------------
+# Egor: send output to GATEWAY
+O,4
+#--------------------------------------
+# Egor: START
+J,1

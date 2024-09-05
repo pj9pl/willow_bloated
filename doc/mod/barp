@@ -1,0 +1,8 @@
+
+  BARP
+
+  The BARP task is a network secretary that receives BAROMETER_NOTIFY messages
+  for an oled screen that displays temperature and pressure. The displayed unit
+  selection is by way of the '<n> u' command:-
+      0u : Fahrenheit and Inches of mercury
+      1u : Celsius and mBar

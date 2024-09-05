@@ -1,0 +1,49 @@
+#
+# bar-multiplot.dem
+#
+
+# Use the barometer and temperature to show off
+# the use of multiple plots.
+# 
+set style line 1 lt rgb "red" lw 1
+set style line 2 lt rgb "orange" lw 1
+set style line 3 lt rgb "yellow" lw 1
+set style line 4 lt rgb "green" lw 1
+set style line 5 lt rgb "cyan" lw 1
+set style line 6 lt rgb "blue" lw 1
+set style line 7 lt rgb "violet" lw 1
+
+#set output "output.png"
+set term png size 1364,710
+#set output "|display png:-"
+set output "red-blue.png"
+set multiplot layout 2, 1 title "BOSCH BMP180 readings 2022-3"
+unset key
+set key off
+set timefmt "%s"
+set format x "%d %b"
+set xdata time
+set ytics nomirror
+set xtics nomirror
+set tics out
+set autoscale  x
+set autoscale  y
+set grid
+set ylabel "Temperature °F"
+set ytics 5
+set mytics 5
+plot "bar.out" using 1:2 with lines ls 1 
+#
+unset key
+set yrange [29:31]
+set ytics 1
+set mytics 5
+set ylabel "Pressure inHg"
+plot "bar.out" using 1:3 with dots ls 6
+
+# undo what we've done
+#pause -1 "Hit return to continue"
+
+# undo what we've done
+#reset
+

@@ -1,0 +1,81 @@
+
+  KEYPAD
+
+  The KEYPAD task is a device driver for a cluster of eight TTP223-BA6
+  touch switches. Active high.
+
+      ---------      ---------      ---------      ---------
+      |       |      |       |      |       |      |       |
+      |   1   |      |   3   |      |   5   |      |   7   |
+      |       |      |       |      |       |      |       |
+      ---------      ---------      ---------      ---------
+
+      ---------      ---------      ---------      ---------
+      |       |      |       |      |       |      |       |
+      |   2   |      |   4   |      |   6   |      |   8   |
+      |       |      |       |      |       |      |       |
+      ---------      ---------      ---------      ---------
+
+       8      7      6      5      4      3      2      1
+   ---------------------------------------------------------
+   |  B7  |  B6  |      |      |      |  B2  |  B1  |  B0  |
+   ---------------------------------------------------------
+
+   ---------------------------------------------------------
+   |      |      |  D5  |  D4  |  D3  |      |      |      |
+   ---------------------------------------------------------
+     bit7                                             bit0
+
+
+  fido input command:
+      'nnnb' : read KEYPAD
+                 case 'b':
+                    if (inp.incount) {
+                        send_READ(KEYPAD, inp.inval);
+                        inp.incount = 0;
+                        inp.inval = 0;
+                        inp.insign = FALSE;
+                    }
+                    break;
+
+
+  When a button is touched, it lights up and the output changes
+  from low to high.
+
+  For a task to be informed of this event, the keypad must be informed
+  in advance by sending it the ID of the task to be informed. This is reset
+  after each occurance to provide a single reply to the prior request.
+
+  The READ request specifies a value in the range [0..31] :-
+      0 - button 1 down
+      1 - button 2 down
+      2 - button 3 down
+      3 - button 4 down
+      4 - button 5 down
+      5 - button 6 down
+      6 - button 7 down
+      7 - button 8 down
+      8 - button 1 up
+      9 - button 2 up
+     10 - button 3 up
+     11 - button 4 up
+     12 - button 5 up
+     13 - button 6 up
+     14 - button 7 up
+     15 - button 8 up
+     16 - reset button 1 down
+     17 - reset button 2 down
+     18 - reset button 3 down
+     19 - reset button 4 down
+     20 - reset button 5 down
+     21 - reset button 6 down
+     22 - reset button 7 down
+     23 - reset button 8 down
+     24 - reset button 1 up
+     25 - reset button 2 up
+     26 - reset button 3 up
+     27 - reset button 4 up
+     28 - reset button 5 up
+     29 - reset button 6 up
+     30 - reset button 7 up
+     31 - reset button 8 up

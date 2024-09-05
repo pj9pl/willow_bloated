@@ -1,0 +1,6 @@
+
+  PERU
+
+  Peru is a host at i2c address 0x3E,0x3F (62,63 decimal).
+  It manages an SPI OLED display.
+

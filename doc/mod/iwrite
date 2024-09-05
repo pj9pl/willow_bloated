@@ -1,0 +1,9 @@
+
+  IWRITE
+
+  The IWRITE performs a remote inode write in response to an FSU_REQUEST with
+  the OP_IWRITE function.
+
+  The client need be aware that both the inode number and the address of the
+  inode buffer must be sent in the request.   
+

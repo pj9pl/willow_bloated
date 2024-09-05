@@ -1,0 +1,18 @@
+Pisa is an application for the AVRmega328P microcontroller.
+
+Its principle reason for being is to control an AD7124 24-bit ADC.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril pisa
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and pisa
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../pisa && make avp)
+

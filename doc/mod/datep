@@ -1,0 +1,5 @@
+
+  DATEP
+
+  The DATEP task is a network secretary that accepts DATE_NOTIFY messages
+  on behalf of an OLED device.

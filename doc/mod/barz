@@ -1,0 +1,6 @@
+
+  BARZ
+
+  The BARZ task is a network secretary that receives a BAROMETER_NOTIFY
+  message containing an mtype byte and an unsigned long. The mtype byte
+  describes the unsigned long.

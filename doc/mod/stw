@@ -1,0 +1,98 @@
+
+  STW
+
+  The STW module is a stopwatch that counts system clock cycles between
+  stw_start() and stw_stop(). The value is obtained using stw_read().  
+
+  It can be configured in [app]/host.h to use any of TIMER 0, 1 or 2. TIMER1
+  is the default, to be preferred where a long elapsed period is likely.
+
+  A typical use is to measure the duration of the receive() functions.
+  The values can be accumulated by task. If the accum[] array is dumped before
+  and after an operation, the individual contributions of each task can be
+  estimated.
+
+  Another typical use is to identify the task and message with the longest
+  duration. On fido, this reveals the BMP REPLY_INFO with 4341 clock cycles,
+  until KEYCONF REPLY_INFO with 8025 cycles.
+
+  The measurement includes the cycles accrued by the interrupt service routines
+  that occur whilst the stopwatch is running, which may attribute cycles to the
+  wrong task.
+
+  Example. The effects on fido of executing the 'key key/basic' CLI command.
+
+fido/host.h:-
+...
+typedef enum {
+    ANY = 0,
+    SER,
+    SYSINIT,
+    SYSCON,
+    INP,
+    TTY,
+    CLK,
+    TWI,
+    MEMZ,
+    MEMP,
+    ISTREAM,
+    TPLOG,
+    TEMPEST,
+    KEYPAD,
+    KEYSEC,
+    KEYCONF,
+    KEYEXEC,
+    BMP,
+    TIMZ,
+    ADCN,
+    VITZ,
+    RTC,
+    NR_TASKS
+} __attribute__((packed)) ProcNumber;
+...
+
+fido.dsm:-
+
+...
+00800421 00000008 B mst
+00800429 00000054 B accum
+...
+
+t1:dump fido 421 47c
+
+0421 1F:00:00:00 59:00:0F:1E 00:00:00:00 56:06:00:00 
+0431 A4:03:00:00 00:00:00:00 00:00:00:00 1E:CD:00:00 
+0441 2B:FD:02:00 6B:3F:00:00 E4:3E:00:00 59:02:00:00 
+0451 42:87:01:00 00:00:00:00 74:99:0F:00 0A:07:00:00 
+0461 A0:D9:00:00 86:0F:00:00 1C:86:03:00 00:00:00:00 
+0471 00:00:00:00 00:00:00:00 DB:00:00:00 
+ok
+
+t1:key key/basic
+ok
+
+t1:dump fido 421 47c
+
+0421 1F:00:00:00 59:00:0F:1E 00:00:00:00 56:06:00:00 
+0431 A4:03:00:00 00:00:00:00 00:00:00:00 1E:CD:00:00 
+0441 3F:73:03:00 B3:4B:00:00 D8:68:00:00 59:02:00:00 
+0451 42:87:01:00 00:00:00:00 24:9C:0F:00 2E:0C:00:00 
+0461 40:B3:01:00 0C:1F:00:00 1C:86:03:00 00:00:00:00 
+0471 00:00:00:00 00:00:00:00 DB:00:00:00 
+ok
+
+  The 'dump fido 421 47c' command accounts for 570 TWI and 349 MEMZ cycles.
+  The cycles attributed to the key key/basic operation are:-
+
+      task      cycles    milliseconds
+
+      TWI        29658      3.70725
+      MEMZ        2795      0.349375
+      MEMP       10740      1.3425
+      KEYPAD       688      0.086
+      KEYSEC      1316      0.172
+      KEYCONF    55712      6.964
+      KEYEXEC     3974      0.49675
+
+  Also revealed above is that KEYCONF REPLY_INFO has the longest duration
+  at 8025 cycles, 1.003125 ms.

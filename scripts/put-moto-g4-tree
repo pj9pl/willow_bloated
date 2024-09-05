@@ -1,0 +1,17 @@
+#!/bin/bash
+# put-moto-g4-tree - copy the latest src tree to sdcard storage.
+# The Moto g4 hotspot needs to be enabled and sshelper to be running.
+motog4=192.168.43.1
+ping -c1 ${motog4} >/dev/null
+if [ $? -ne 0 ]
+then
+  echo "Moto G4 not found: enable the hotspot?"
+  exit 1
+fi
+
+latest=`ls -rt ~/Code/willow-dailys |tail -1`
+
+tar zxvpf ~/Code/willow-dailys/$latest
+bname=`basename ~/Code/willow-dailys/$latest .tar.gz`
+rsync -av -e'ssh -p2222' $bname ${motog4}:/storage/858C-1B17/things/willow/src
+

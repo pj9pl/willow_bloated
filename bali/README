@@ -1,0 +1,54 @@
+Bali is an application for the ATmega328P microcontroller.
+It provides access to the internal devices from the outside world.
+
+It is connected to the internal devices via the TWI.
+
+The linux development environment uses four terminals referred to
+as SEND, RECV, MAKE and AUX.
+
+     --------------------
+     |  SEND  |   MAKE  |
+     --------------------
+     |  AUX   |   RECV  |
+     --------------------
+
+These are all situated in the bali working directory and have exported $tmpdir,
+$port, $PORT and $logfileprefix to the environment by executing:-
+
+     . ./defs.sh
+
+Bali's green button activates the HC-05 Bluetooth adapter for 30 seconds.
+This is only necessary when the maintenance switch is in the normal position.
+When the switch is in the maintenance position (closed) the HC-05 is activated
+by default.
+
+In the SEND terminal execute:-
+
+      bt_tee_sender.sh 
+
+In the RECV terminal execute:-
+
+      bt_tee_receiver.sh
+
+Filters can tail -f the file being accumulated in ../tmp.
+
+To reprogram the application in bali:-
+ - Ensure the bootloader switch is closed.
+ - Quit bt_tee_receiver.sh so that avrdude can read the incoming data.
+ - If bali is in CLI mode enter 'reboot self' into the SEND terminal
+   whereas if bali is in INP mode enter 'q' into the SEND terminal.
+   Alternatively press the RESET (red) button.
+   The mode can be checked by entering 'e' into the SEND terminal.
+   - INP mode will print e.g. '# bali ivy-10-g0ba5b93 Dec 20 2023 09:21:31'
+   - CLI mode will print e.g. 'e :  bad command'.
+ - Enter 'make flash' into the MAKE terminal.
+
+If avrdude succeeds, the updated application will now be running and
+bt_tee_receiver.sh can again be run in the RECV terminal. It will be in INP
+mode. This can be confirmed be entering 'e' into the SEND terminal which
+prints the ident in the RECV terminal.
+
+# Operation
+
+Refer to README.commands.
+

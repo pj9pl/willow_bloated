@@ -1,0 +1,11 @@
+
+  PLCD
+
+  The PLCD task is a device driver for a parallel-connected LCD display.
+
+  The PLCD is assisted by a cache and a number of secretaries.
+  DATEZ, PRESSZ, TEMPERZ, VOLTAGEZ and BATTERYZ accept requests from
+  any twi host.
+
+  The secretary then transcribes the information into a job which is queued
+  at the cache which transcribes differences into a series of PLCD jobs.

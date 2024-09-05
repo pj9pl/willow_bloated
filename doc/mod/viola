@@ -1,0 +1,10 @@
+
+  VIOLA
+
+  The VIOLA task is a manager for a Velleman VMA437 128x64 1.3" OLED screeni
+  containing an SH1106. It is connected via the 4-wire SPI interface described
+  in SH1106.pdf on page 10. The SPI interface is driven by VESPA.
+
+  It is hosted on peru.
+
+  It assumes the alias of OLED.

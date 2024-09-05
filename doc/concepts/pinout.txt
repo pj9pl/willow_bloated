@@ -1,0 +1,34 @@
+
+  Willow standard pin connections for an ATmega328P.
+
+                         -------U-------
+      EXTERNAL_RESET -> -|RESET      C5|- <-> TWI_SCL
+                         |             |
+             HC05_TX -> -|D0         C4|- <-> TWI_SDA
+                         |             |
+             HC05_RX <- -|D1         C3|-
+                         |             |
+                        -|D2         C2|-
+                         |             |
+         HC05_STATUS -> -|D2         C1|-
+                         |             |
+                        -|D4         C0|-
+                         |             |
+                  +3.3v -|VCC       GND|- 0v
+                         |             |
+                     0v -|GND      AREF|- 
+                         |             |
+                        -|B6       AVCC|- +3.3v
+                         |             |
+                        -|B7         B5|- <- ICSP_SCK
+                         |             |
+         HC05_ENABLE <- -|D5         B4|- -> ICSP_MISO
+                         |             |
+   BOOTLOADER_SWITCH -> -|D6         B3|- <- ICSP_MOSI
+                         |             | 
+      EXTERNAL_RESET <- -|D7         B2|-
+                         |             |
+                        -|B0         B1|-
+                         ---------------
+
+                           EXTERNAL_RESET <- ICSP_RESET

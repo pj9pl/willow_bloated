@@ -1,0 +1,130 @@
+
+  BLUETOOTH
+
+  --------------------------------------------------------------------------
+  BlueZ 5 compatibility fix:-
+  As root,
+  1. Edit /etc/systemd/system/dbus-org.bluez.service to add --compat to the
+     bluetooth daemon args:-
+          < ExecStart=/usr/lib/bluetooth/bluetoothd
+          > ExecStart=/usr/lib/bluetooth/bluetoothd --compat
+ 
+  2. run:-
+      systemctl daemon-reload 
+      systemctl restart bluetooth
+      chmod 777 /var/run/sdp
+
+  --------------------------------------------------------------------------
+  The serial port profile is used to connect a linux host to a HC-05 adapter.
+
+  Four terminals are currently used to communicate with bali's HC-05:-
+          ---------------------------------
+          |               |               |
+          |     send      |      make     |
+          |               |               |
+          |---------------|---------------|
+          |               |               |
+          |      aux      |    receive    |
+          |               |               |
+          ---------------------------------
+  In all four terminals, change to the willow/bali directory and run:-
+
+     . ./defs.sh
+
+  This exports the /dev/rfcommN used with bali's HC-05 to the environment
+  as $port.
+
+  --
+
+  Linux Bluetooth
+
+  Following a linux reboot, the /dev/rfcommN character special files need to be
+  recreated.  The Xfce GUI method is what I have been using so far.
+
+   - Click on the Bluetooth logo in the system tray. Click on the 'Devices..'
+     menu item. This should open the Bluetooth Devices dialog.
+
+   - If the HC-05 LED is not flashing at all, press bali's green button to 
+     wake it up and set the HC-05 LED flashing at ~2Hz, 50% duty cycle,
+     indicating that it is in pairing mode.
+
+   - In the Bluetooth Devices dialog, right-click on the Bali device and select
+     'Connect to serial port' from the menu.
+
+   - When a connection is established, close the Bluetooth Devices dialog.
+
+   This connection lasts until the HC-05 adapter is next deactivated.
+   The corresponding /dev/rfcomm[0..N] file can be opened and closed without
+   causing a disconnection.
+ 
+     Once the HC-05 has been deactivated, the 'behind-the-scenes' connection
+     is obsolete. Upon reactivation, the HC-05 LED flashes at ~2Hz 
+     and the bt_tee_sender.sh is used to establish the bt_tee_sender.sh script
+     from within bali's working directory, as decribed below.
+
+     After this grace period, the bt_tee_sender.sh is run whilst the HC-05 LED
+     is flashing rapidly, indicating that it is in pairing mode. This should
+     achieve a connection, whereupon the bt_tee_receiver.sh can be run in the
+     receiver terminal.
+
+   - If linux is restarted, this procedure will need to be repeated.
+
+  --
+
+  If need be, press bali's  green (WAKEUP) pushbutton to start the HC-05
+  flashing, in which case it will time-out after 30 seconds of being
+  unconnected.
+
+  Run the bt_tee_sender.sh script from within the sender terminal.
+  This establishes a connection and also create an output file in willow/tmp
+  containing both sides of the exchange. If the connection fails, try again.
+
+  Once a connection has been established, run the bt_tee_receiver.sh script in
+  the receiver terminal. This will receive incoming data and append it to the
+  file that bt_tee_sender.sh just created.
+
+  Note that if bt_tee_sender.sh is stopped and restarted, a new tmp file will
+  be created, and bt_tee_receiver.sh will need to be restarted to append to the
+  new file.
+
+  --
+
+  AT Command Mode.
+
+  The adapter connected to pisa has had the NAME changed to pisa and the UART
+  changed to 57600,0,0. There is still some confusion regarding the non-output
+  of some AT commands, mainly GET commands. For example, setting the name using
+       print <host> AT+NAME=pisa
+  produces
+       OK
+  but getting the name using
+       print <host> AT+NAME?
+  or
+       print <host> AT+NAME
+  produces nothing.
+
+  Whereas getting the UART parameters using
+       print <host> AT+UART?
+  or
+       print <host> AT+UART
+  produces
+       +UART:57600,0,0
+
+       OK
+
+  The name 'pisa' appears instead of 'HC-05' in both the Android app and the
+  linux Blueman-manager.
+
+  The '3d' inp command is very much faster, suggesting that the baud rate has
+  been increased.
+
+  p.s.
+    For some unknown reason, the Acer Chromebook (camel) has changed its
+    behavior. The connection needs pairing each time after Zara is switched
+    off. It didn't do this previously.
+
+    The RPi is worse, in that it does not connect between the Belkin USB
+    Bluetooth dongle and a HC-05 adapter.
+
+    The Acer Chromebook problems started after playing with the RPi.
+    Coincidence or causal link?

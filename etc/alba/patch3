@@ -1,0 +1,94 @@
+# patch3 - dual unipolar inputs Ain12, Ain14
+#          external 2.5v reference.
+#          2047 filter (maximum)
+# n.b. this config file takes about 18
+#   seconds to complete, depending on the
+#   filter setting, below.
+#--------------------------------------
+# send STOP to EGOR
+J,0
+#--------------------------------------
+# reset
+I
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# read status to clear POR flag
+R,0x00
+#--------------------------------------
+# set standby mode
+W,0x01,0x0048
+#--------------------------------------
+# enable VBIAS on channels 0..11
+W,0x04,0x0FFF
+#--------------------------------------
+# write CONFIG_0 [p.90] with:-
+#   REF_BUFP = (0x01 << 8)  = 0x0100
+#   AIN_BUFP = (0x01 << 6)  = 0x0040
+#   REFIN1   = (0x00 << 3)  = 0x0000
+#   PGA Gain = 0            = 0x0000
+W,0x19,0x0140
+#--------------------------------------
+# FILTER_0
+#   FAST SINC4  (0x04 << 21) = 0x800000
+#   POST FILTER (0x06 << 17) = 0x0C0000
+#   FS          (0x7FF << 0) = 0x0007FF
+# 
+#  7FF = 8 seconds per measurement
+#  3FF = 4
+#  2FF = 3
+#  1FF = 2
+W,0x21,0x8C07FF
+#--------------------------------------
+# write CHANNEL_0 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x09,0x8191
+#--------------------------------------
+# perform internal zero scale calibration
+W,0x01,0x0054
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# disable CHANNEL_0 [p.88] with:-
+W,0x09,0x0191
+#--------------------------------------
+# write CHANNEL_1 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0D << 5)  = 0x01A0 (decimal 13) pin Ain13,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+W,0x0A,0x81B1
+#--------------------------------------
+# perform internal zero scale calibration
+W,0x01,0x0054
+#--------------------------------------
+# wait for EOC
+C
+#--------------------------------------
+# re-enable CHANNEL_0
+W,0x09,0x8191
+#--------------------------------------
+# set to standby mode
+W,0x01,0x0048
+#--------------------------------------
+# set EGOR output off
+# 0 = off
+# 1 = VOLTAGEZ @ sumo
+# 3 = OSTREAM @ peru
+# 4 = OSTREAM @ GATEWAY
+# 5 = VOLTAGEP @ peru
+# 7 = VOLTAGEP @ GENERAL CALL (any,none)
+O,0
+#--------------------------------------
+# set EGOR display mode (EGOR will | 32)
+# i.e. 3 and 35 are equivalent.
+V,3
+#--------------------------------------
+# send START to EGOR
+J,1
+#--------------------------------------

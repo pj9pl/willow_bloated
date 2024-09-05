@@ -1,0 +1,50 @@
+# mdac-two-differential-bipolar.goo
+#
+# Script to configure Pisa for two differential
+# inputs on A12,A13 and A14,A15 
+#-----------------------------------------
+# Begin with a reset.
+:yFFFFFFFFFFFFFFFF;
+#
+#
+#
+#
+#----------------------------------------
+# read STATUS_REGISTER to clear the POR_FLAG
+:y4000;
+#
+#
+#----------------------------------------
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#   MID_POWER  = (0x01 << 6)   = 0x0040,
+#   STANDBY    = (0x02 << 2)   = 0x0008,
+#   INTERNAL_CLK = (0x00 << 0) = 0x0000.
+:y010048;
+#
+#---------------------------------------
+# write CHANNEL_0 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#   AINM   = (0x0D << 0)  = 0x000D (decimal 13) pin Ain13.
+:y09818D;
+#
+#---------------------------------------
+# write CHANNEL_1 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0E << 5)  = 0x01C0 (decimal 14) pin Ain14,
+#   AINM   = (0x0F << 0)  = 0x000F (decimal 15) pin Ain15.
+:y0A81CF;
+#
+#--------------------------------------
+# write CONFIG_0 [p.90] with:-
+#   BIPOLAR  = (0x01 << 11) = 0x0800
+#   REF_BUFP = (0x01 << 8)  = 0x0100
+#   AIN_BUFP = (0x01 << 6)  = 0x0040
+#   AIN_BUFM = (0x01 << 5)  = 0x0020
+#   REFIN1   = (0x00 << 3)  = 0x0000
+#   PGA Gain = 1            = 0x0000
+:y190960;
+#
+# end

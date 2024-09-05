@@ -1,0 +1,9 @@
+
+
+  RLCAT
+
+  rlcat is a readline terminal interface into bali, the Willow gateway.
+
+  Input text that is tee'd into a tmpfile is prefixed with a '$' at the
+  beginning of the line to differentiate between commands and responses.
+  

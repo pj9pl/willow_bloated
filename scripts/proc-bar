@@ -1,0 +1,9 @@
+#!/bin/sh
+# proc-bar - process all barometer output since 10:30:57 May 25th 2022 BST
+#            be,xxxxxxxx,xx,xxxxxxxx
+OUTFILE=bar.out
+grep -E ^be,[[:xdigit:]]{8},[[:xdigit:]]{2},[[:xdigit:]]{8}$ \
+              ../tmp/$logfileprefix*sentf|cut -d':' -f2-|cut -d',' -f2-| \
+             grep -v 'C3810006'|grep -v ',0C39000'|grep -v ',6ED1000F' | \
+             cat ../legacy/BMP180-feb-may-2022 - |\
+             sort|uniq|barometer-3col >$OUTFILE

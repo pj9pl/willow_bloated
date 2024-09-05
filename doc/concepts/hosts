@@ -1,0 +1,6 @@
+
+  HOSTS
+
+  There are two kinds of host: internal and external. Internal hosts
+  have the twiboot bootloader at 0x7C00 with an I2C address hard coded
+  into it. External hosts have the USART bootloader at 0x7800.

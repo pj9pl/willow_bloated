@@ -1,0 +1,10 @@
+#!/bin/sh
+# proc-volt - process voltage records
+#            eg,xxxxxxxx,xx,xxxxxxxx
+OUTFILE=volt.out
+grep -E ^eg,[[:xdigit:]]{8},[[:xdigit:]]{2},[[:xdigit:]]{8}$ \
+                  ../tmp/$logfileprefix*sentf|grep -v '23,0000' | \
+                  grep -v '23,0100'|cut -d':' -f2-|cut -d',' -f2-| \
+                  sort|uniq|voltage-3col >$OUTFILE
+grep '^D' bar.out >recent.out
+lines 169260 bar.out >>recent.out

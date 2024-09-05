@@ -1,0 +1,19 @@
+
+  BALI
+
+  Bali is a host at i2c address 0x3C,0x3D (60,61 decimal).
+  It manages a cli, icsp and isp.
+
+  It has an 11.06 MHz ceramic resonator.
+  The Low Fuse Byte is programmed to 0xCF [p.292-3] to select the Low Power
+  Crystal Oscillator as the Clock Source between 8.0 and 16.0 MHz with slowly
+  rising power[p.38-9].
+
+  Note that the Full Swing Crystal Oscillator is not supported [p.654].
+
+  It has a BC417 HC-05 Bluetooth adaptor with the baudrate set to 115200.
+
+  It has an ICSP output in addition to an ICSP input.
+
+  It has a serial bootloader with the baudrate at 115200.
+  The High Fuse Byte is programmed to 0xDA for a 2k bootsize from 0x7800.

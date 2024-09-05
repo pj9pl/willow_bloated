@@ -1,0 +1,12 @@
+
+  GOAT
+
+  Goat hosts a high voltage parallel programmer. It can be used to recover an
+  ATmega328P-PU (28 pin DIP) after the fuses have been misprogrammed.
+
+  It operates at +5v and requires a separate +12v supply that is applied to the
+  target processor RESET input.
+
+  The RDY/BSY input to INT0 is inverted to present a low-level /READY term
+  which allows a low-level trigger, which is enabled 1.5us after the event.
+

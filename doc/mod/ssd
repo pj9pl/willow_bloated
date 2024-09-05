@@ -1,0 +1,5 @@
+
+  SSD
+
+  The SSD task is a device driver for an SDCard connected via the SPI
+  interface. It is unusual and complicated.

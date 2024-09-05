@@ -1,0 +1,45 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ Proc-Bss - process the output of list-bss.
+
+usage: avr-nm -S --size-sort *.elf|grep '^0080' |sort |proc-bss >symtab.c
+
+*/
+
+class ProcBss {
+
+    function main($argv, $argc) {
+
+        $start = "1";
+        $len = "2";
+        $adr = 1;
+        $seg = "b";
+        $siz = 0;
+        $name = "none";
+        printf("/* symtab.c */\n\n");
+        printf("#include \"sys/symtab.h\"\n\n");
+        printf("const ProgmemStringSymRef __flash symtab_[] = {\n");
+
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "%s %s %s %s", $start, $len, $seg, $name) == 4) {
+                $adr = hexdec($start) - 0x800000;
+                $siz = hexdec($len);
+                printf(
+        "    {(ProgmemStringLiteral){\"$name\"}, '$seg', 0x%x, 0x%x},\n",
+                     $adr, $siz);
+            }
+        }
+        printf("};\n\n");
+        printf("ushort_t get_nsym(void)\n");
+        printf("{\n");
+        printf("    return (sizeof(symtab_) / sizeof(ProgmemStringSymRef));\n");
+        printf("}\n\n");
+        printf("/* end code*/\n");
+    }
+}
+
+$foo = new ProcBss;
+$foo->main($argv, $argc);
+?>

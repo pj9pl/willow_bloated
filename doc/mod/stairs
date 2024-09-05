@@ -1,0 +1,8 @@
+
+  STAIRS
+
+  The STAIRS task is an iterative process director that sets the MDAC to a
+  value and then requests EGOR to perform a given number of measurements of
+  that value. When EGOR has finished the value is incremented by a given
+  stepsize and the process is repeated until the value reaches maximum.
+

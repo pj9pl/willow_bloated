@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+/* goose - a force-feeder. a goose-stepper.
+           not a goose as all.
+   usage: ./goose [-n seconds]  < welcome.cat |tee /dev/rfcomm0
+*/
+
+class Goose {
+
+    function main($argv, $argc) {
+        $naptime = 1000000;
+        $tmp;
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-n") {
+                    if ($i < $argc) {
+                        list($tmp) = sscanf($argv[$i + 1], "%d");
+                        if ($tmp > 0 && $tmp < 5)
+                            $naptime = 1000000 * $tmp;
+                    }
+                }
+            }
+        }
+        while ($line = fgets(STDIN)) {
+            $pos = strpos($line, '#');
+            if ($pos === false || $pos > 1) {
+                if (strlen($line)>1) {
+                    if (strcmp($line, ".\n"))
+                        print("$line");
+                    usleep($naptime);
+                }
+            }
+        }
+    }
+}
+
+$foo = new Goose;
+$foo->main($argv, $argc);
+?>

@@ -1,0 +1,78 @@
+#!/usr/bin/env php
+<?php
+
+/* setupfs - create and populate a new file system.
+
+   usage: setupfs [-p port]
+*/
+
+class SetupFs {
+
+    function main($argv, $argc) {
+        $portin = 0;
+        $portout = 0;
+        $portname;
+        $n = 0;
+
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portname = $argv[$i + 1];
+                        $portin = fopen($portname, "r");
+                        $portout = fopen($portname, "w");
+                    }
+                }
+            }
+        }
+        if ($portin == 0 && $portout == 0) {
+            $portname = getenv("port");
+            if ($portname) {
+                $portin = fopen($portname, "r");
+                $portout = fopen($portname, "w");
+            }
+        }
+        $fruits = array (
+                          array ("mkfs",         "ok" ),
+                          array ("cd /",         "ok" ),
+                          array ("mk 8 bar1",    "ok" ),
+                          array ("mk 8 bar2",    "ok" ),
+                          array ("mk 8 bar3",    "ok" ),
+                          array ("mk 8 bar4",    "ok" ),
+                          array ("mk 32 egor1",  "ok" ),
+                          array ("mk 32 egor2",  "ok" ),
+                          array ("mk 32 egor3",  "ok" ),
+                          array ("mk 32 egor4",  "ok" ),
+                        );
+
+        if ($portin && $portout) { 
+            foreach ($fruits as $fruit) {
+                $n++;
+                fprintf(STDOUT, "%2d %-40s ", $n, $fruit[0]);
+                fflush(STDOUT);
+                fputs($portout, $fruit[0] . "\n");
+                $response = fgets($portin);
+                if (strcmp($response, $fruit[1] . "\n") != 0) {
+                    fputs(STDERR, "expected '" . $fruit[1] . "', got "
+                                                               . $response);
+                    exit(1);
+                } else {
+                    fprintf(STDOUT, "%-15s passed\n", $fruit[1]);
+                }
+            }
+            fclose($portin);
+
+            exec("putfile -p $portname -i ../etc/alba/patch3 -o /alba/patch3");
+            exec("putfile -p $portname -i ../etc/key/basic -o /key/basic");
+
+            print("file system created and populated\n");
+
+            fclose($portout);
+        }
+    }
+}
+
+$foo = new SetupFs;
+$foo->main($argv, $argc);
+?>
+

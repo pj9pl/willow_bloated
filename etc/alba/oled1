@@ -1,0 +1,25 @@
+#-------------------
+# oled1 - OLED test
+#-------------------
+# SET_OLED_CONTRAST
+A,8
+#-------------------
+# Clear OLED
+B,2
+#-------------------
+# Reset OLED LINESTART
+S,0
+#-------------------
+# Enable OLED
+B,1
+#-------------------
+# OLED Draw text
+T,0,0,1,0,Hi everybody
+T,64,59,1,0,Hi everybody
+#-------------------
+# OLED Draw rect
+E,20,10,87,43,1,0
+#-------------------
+# OLED Draw line
+N,21,11,106,52,1,0
+#-------------------

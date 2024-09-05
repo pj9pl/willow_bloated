@@ -1,0 +1,75 @@
+# ratiometric-resistance.goo
+#
+# Script to configure Pisa for ratiometric resistance measurements
+# comparing Ain12 and Ain13 with REFIN2(+) and REFIN2(-).
+# 
+# Source an excitation current from pin Ain6.
+# Pass the current through the resistors and sink into the PSW input. 
+#
+#-----------------------------------------------------------------------------
+# Begin with a reset.
+R
+#-----------------------------------------------------------------------------
+# read STATUS_REGISTER to clear the POR_FLAG
+0r
+#
+#
+#-----------------------------------------------------------------------------
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#                 DATA_STATUS = (0x01 << 10) = 0x0400, 
+#                 REF_EN      = (0x01 << 8)  = 0x0100, 
+#                 FULL_POWER  = (0x02 << 6)  = 0x0080,
+#                 CONTINUOUS_CONVERSION = (0x00 << 2) = 0x0000,
+#                 INTERNAL_CLK= (0x00 << 0)  = 0x0000.
+:y010580;
+#
+#-----------------------------------------------------------------------------
+# write IO_CONTROL_1 [p.82] with:-
+#                 PDSW = (0x01 << 15)    = 0x008000,
+#                 IOUT0 = (0x01 << 8)    = 0x000100,
+#                 IOUT0_CH = (0x06 << 0) = 0x000006,
+:y03008106;
+#
+#-----------------------------------------------------------------------------
+# write CONFIG_0 [p.90] with:-
+#                 BIPOLAR     = (0x01 << 11) = 0x0800
+#                 REF_BUFP    = (0x01 << 8)  = 0x0100
+#                 REF_BUFM    = (0x01 << 7)  = 0x0080
+#                 AIN_BUFP    = (0x01 << 6)  = 0x0040
+#                 AIN_BUFM    = (0x01 << 5)  = 0x0020
+#                 INTERNAL_REF = (0x02 << 3) = 0x0010
+#
+:y1909f0;
+#
+#-----------------------------------------------------------------------------
+# write FILTER_0 [p.91] with
+#                 POST_FILTER = (0x03 << 17) = 0x060000,
+#                 FS = (0x780 << 0)          = 0x000780 (decimal 1920)
+:y21060780;
+#
+#-----------------------------------------------------------------------------
+# write CHANNEL_1 [p.88] with:-
+#                 ENABLE = (0x01 << 15) = 0x8000,
+#                 SETUP  = (0x01 << 12) = 0x1000,
+#                 AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#                 AINM   = (0x0D << 0)  = 0x000D (decimal 13) pin Ain13.
+:y0A918D;
+#
+#-----------------------------------------------------------------------------
+# write CONFIG_1 [p.90] with:-
+#                 UNIPOLAR = (0x00 << 11) = 0x0000
+#                 REF_BUFP = (0x01 << 8)  = 0x0100
+#                 REF_BUFM = (0x01 << 7)  = 0x0080
+#                 AIN_BUFP = (0x01 << 6)  = 0x0040
+#                 AIN_BUFM = (0x01 << 5)  = 0x0020
+#                 REFIN2 = (0x01 << 3)    = 0x0008
+#                 pga = 000               = 0x0000
+:y1A01E8;
+#
+#-----------------------------------------------------------------------------
+# write FILTER_1 [p.91] with
+#                 POST_FILTER = (0x03 << 17) = 0x060000,
+#                 FS = (0x780 << 0)          = 0x000780 (decimal 1920)
+:y22060780;
+#
+

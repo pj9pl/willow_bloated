@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+/* voltfilter - transform a count value into the corresponding
+                voltage according to the accumulation value.
+                usage: ./voltfilter [-b] <file.outf >file.vs
+                        -b don't show count value, just the voltage.
+*/
+
+class VoltFilter {
+
+    function main($argv, $argc) {
+    //    $max = 16777215;
+        $max = 0xFFFFFF; // 16777215
+        $mid = $max >> 1; // 8388607
+        $bare = False;
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-b")
+                    $bare = True;
+            }
+        }
+        $base = 18432;
+
+        $vFull = 0;
+        $vSize = 6;
+        $vIndex = 0;
+        $vTotal = 0;
+        $vValue = 0;
+
+        $scount = 0;
+        $sindex = 0;
+
+        $prev = 0;
+        $diff = 0;
+
+        $hexstr = "0";
+
+        $vval = 0;
+        $uval = 0;
+        $oval = 0;
+
+        $accumulation = 10;
+        $new_accumulation = 10;
+        $countval = 0;
+
+        $accumulation_unset = True;
+
+        $precision = 4 + round(log10($accumulation));
+        $new_precision = 4;
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "%s", $hexstr) == 1) {
+                $vval = hexdec($hexstr);
+                print($vval);
+                print("  ");
+ //               print(5.0 / $max * $vval - 2.5);
+                print(5.0 / $max * $vval);
+                print("\n");
+            }
+        }
+    }
+}
+
+$foo = new VoltFilter;
+$foo->main($argv, $argc);
+?>

@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ ProcCsv2 - process comma separated variables.
+            time,temperature,pressure
+            convert Pascals into inches of mercury.
+             usage: ./proccsv2 <file.outf >file.vs
+*/
+
+class ProcCsv2 {
+
+    function main($argv, $argc) {
+        $errornames = array("EOK","EPERM","ENOENT","ESRCH","EINTR","EIO",
+                            "ENXIO","E2BIG","ENOEXEC","EBADF","ECHILD",
+                            "EAGAIN","ENOMEM","EACCES","EFAULT","ENOTBLK",
+                            "EBUSY","EEXIST","EXDEV","ENODEV","ENOTDIR",
+                            "EISDIR","EINVAL","ENFILE","EMFILE","ENOTTY",
+                            "ETXTBSY","EFBIG","ENOSPC","ESPIPE","EROFS",
+                            "EMLINK","EPIPE","EDOM","ERANGE","EDEADLK",
+                            "ENAMETOOLONG","ENOLCK","ENOSYS","ENOTEMPTY",
+                            "ELOOP","EWOULDBLOCK","ENOMSG","EIDRM","ECHRNG",
+                            "EL2NSYNC","EL3HLT","EL3RST","ELNRNG","EUNATCH",
+                            "ENOCSI","EL2HLT","EBADE","EBADR","EXFULL",
+                            "ENOANO","EBADRQC", "EBADSLT");
+
+        $procnames = array("NIL", "SER", "SYS", "INP", "TTY", "CLK", "RTC",
+                           "DMP", "TWI", "MARCO", "POLO", "BMP", "SSD", "MKFS",
+                           "FSCK", "BC3", "BC4", "ADX", "MEAS", "UPD", "EEP",
+                           "MAP", "RWD", "INO", "SDC", "FRD", "FWR", "LTP",
+                           "LOGD", "NLCD", "NADC", "BAT", "PLCD", "DATED",
+                           "PRESSURED", "TEMPERATURED", "BATTERYD",
+                           "GLYPH", "ALBA", "EGOR", "VOLTAGED");
+
+        $ctime = 0;
+        $ctemperature = 0;
+        $cpressure = 0;
+
+        $factor = 0.0002953;
+
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "sCp:%d,%d,%d", $ctime, $ctemperature, $cpressure)
+                                                                        == 3) {
+                print(strftime("%F %T",$ctime) . " ");
+                printf("%2.1f ",((($ctemperature / 10) * 1.8) + 32));
+                printf("%2.3f\n", $cpressure * $factor);
+            } else if (sscanf($f, "v:%s", $str) == 1) {
+                list($hextime, $hextype, $hexvalue) = explode(',', $str);
+                $vtime = hexdec($hextime);
+                $vtype = hexdec($hextype);
+                $vvalue = hexdec($hexvalue);
+                print(strftime("%F %T",$vtime) . " ");
+                printf("%d ", $vtype);
+                printf("%d\n", $vvalue);
+            } else if (sscanf($f, "rr:%d,%d", $proc_nr, $res_val) == 2) {
+                print($procnames[$proc_nr] . " ");
+                print($errornames[$res_val] . "\n");
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv2;
+$foo->main($argv, $argc);
+?>

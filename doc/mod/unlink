@@ -1,0 +1,5 @@
+
+  UNLINK
+
+  The UNLINK task is used by the MV and RM tasks to remove an item from
+  a directory.

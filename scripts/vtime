@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ vtime
+     usage: trailer.sh|vtime
+
+     input format:-
+            rtc:1655980401
+        or  utc:1716970054.254
+*/
+
+class VTime {
+
+    function main($argv, $argc) {
+        while ($str = fgets(STDIN)) {
+            if (strncmp($str, "utc:", strlen("utc:")) == 0) {
+                if (list($s1, $s2) = explode(':', $str)) {
+                    $ctime = intval($s2);
+                    print(strftime("%F %T",$ctime) . "\n");
+                }
+            }
+            if (strncmp($str, "rtc:", strlen("rtc:")) == 0) {
+                if (list($s1, $s2) = explode(':', $str)) {
+                    $ctime = intval($s2);
+                    print(strftime("%F %T",$ctime) . "\n");
+                }
+            }
+        }
+    }
+}
+
+$foo = new VTime;
+$foo->main($argv, $argc);
+?>

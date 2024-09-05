@@ -1,0 +1,10 @@
+
+  OSTREAM
+
+  The OSTREAM task is a network secretary that accepts an OSTREAM_REQUEST
+  message and then fetches data from the caller and sends it to the SER output.
+
+  OSTREAM operates in lockstep with SER, and is unavailable until SER has
+  completed. This unavailability is expressed as an EAGAIN error being
+  returned in the reply to a failed request from another client, who should
+  try again later.

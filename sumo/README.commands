@@ -1,0 +1,19 @@
+# README.commands
+
+0B : LCD switch backlight off
+1B : LCD switch backlight on
+
+c : print cycle count
+
+e : print build ident
+
+0j : LCD clear display
+1j : LCD return home
+
+0u : BARZ display Fahrenheit and Inches of mercury
+1u : BARZ display Celsius and mBar (hPa)
+
+0z : direct TTY output to local SER 
+1z : direct TTY output to GATEWAY OSTREAM 
+2z : TTY output to TWI_OLED_HOST OSTREAM
+3z : TTY output to SPI_OLED_HOST OSTREAM

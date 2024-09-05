@@ -1,0 +1,25 @@
+
+  BCY
+
+   The BCY task is a Bluetooth ZS_040 BC352 HC-05 manager.
+
+   This driver manages four pins:-
+   PIND2 (#4) - tristate  low/Hi-Z = transparent UART, high = AT_MODE.
+                reading the pin value during tristate might differentiate
+                between the BC352 (low) and the BC417 (high) adapters.
+
+   PIND3 (#5) - input  low = disconnected, high = connected.
+
+   PIND4 (#6) - input  low = wake_up.
+
+   PIND5 (#11) - output  high == enabled, low == disabled.
+
+   Accepts status requests and produces a long reply containing the
+   enabled and connected status as bit 3 (connected) and bit 5 (enabled).
+
+   HC-05 adapters are a mixed bunch. Those that feature a BC352 don't respond
+   to a low level on the ENABLE input, whereas those that feature a BC417 do.
+
+   The current solution for BC352 adapters involves an external +5v VDD switch
+   using an IRF9530, a 2N7000 and a 33k resistor.
+

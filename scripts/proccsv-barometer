@@ -1,0 +1,68 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ proccsv-barometer - process comma separated hex variables.
+            time, type, temperature << 22 | pressure & 0x003FFFFF
+            input:  61EEA2D1,06,2E019427
+            output: 2022-01-24 13:00:01 18.4 103.463
+
+     usage: grep -E ^be,[[:xdigit:]]{8},[[:xdigit:]]{2},[[:xdigit:]]{8}$ \
+         `ls -rt ../tmp/maple*|tail -1`|cut -c2- |sort|uniq|./proccsv-barometer
+*/
+
+class ProcCsv {
+
+    function main($argv, $argc) {
+        $SEVEN_MINUTES = 420;
+        $SIX_MINUTES = 360;
+        $lasttime = 0;
+        $lasttemppres = 0;
+        $ctime = 0;
+        $type = 0;
+        $temppres = 0;
+        $units = 0; /* 0= C and millibars, 1= F and inHg. */ 
+        while ($str = fgets(STDIN)) {
+            if (list($s1, $s2, $s3) = explode(',', $str)) {
+                $ctime = hexdec($s1);
+                $type = hexdec($s2);
+                $temppres = hexdec($s3);
+                if ($type == 6) {
+                    if ($lasttime == 0) {
+                        $lasttime = $ctime;
+                        $lasttemppres = $temppres;
+                    }
+                    while ($lasttime + $SEVEN_MINUTES < $ctime) {
+                        /* fill in any hiatus in measurements */
+                        $lasttime += $SIX_MINUTES;
+                        print(strftime("%F %T",$lasttime) . " ");
+                        if ($units) {
+                            printf("%.1f ", ($lasttemppres >> 22) * 0.18 + 32);
+                            printf("%.3f\n", ($lasttemppres & 0x003FFFFF) /
+                                                              3386.3886666667);
+                        } else {
+                            printf("%.1f ", ($lasttemppres >> 22) / 10.0);
+                            printf("%.3f\n", ($lasttemppres & 0x003FFFFF) /
+                                                              100.0);
+                        }
+                    }
+                    $lasttime = $ctime;
+                    $lasttemppres = $temppres;
+                    print(strftime("%F %T",$ctime) . " ");
+                    if ($units) {
+                        printf("%.1f ", ($temppres >> 22) * 0.18 + 32);
+                        printf("%.3f\n", ($temppres & 0x003FFFFF) /
+                                                              3386.3886666667);
+                    } else {
+                        printf("%.1f ", ($temppres >> 22) / 10.0);
+                        printf("%.3f\n", ($temppres & 0x003FFFFF) / 100.0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv;
+$foo->main($argv, $argc);
+?>

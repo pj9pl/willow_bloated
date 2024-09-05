@@ -1,0 +1,39 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ proccsv-voltmeter - process comma separated hex variables.
+            time, type, channel << 24 | measurement & 0x00FFFFFF
+            input:  62135E25,22,00563DA0
+            output: 2022-02-21 09:40:53 0 5651872
+
+     usage: grep ^av,........,2[012], \
+              `ls -rt ../tmp/bali*sentf|tail -1`|sort|uniq|./proccsv-voltmeter
+*/
+
+class ProcCsv {
+
+    function main($argv, $argc) {
+
+        $ctime = 0;
+        $type = 0;
+        $temppres = 0;
+
+        while ($str = fgets(STDIN)) {
+            if (list($s0, $s1, $s2, $s3) = explode(',', $str)) {
+                $ctime = hexdec($s1);
+                $type = hexdec($s2);
+                $temppres = hexdec($s3);
+                if ($type == 32 || $type == 33 || $type == 34 || $type == 35) {
+                    print(strftime("%F %T",$ctime) . " ");
+                    printf("%1d ", $temppres >> 24);
+                    printf("%d\n", $temppres & 0x00FFFFFF);
+                }
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv;
+$foo->main($argv, $argc);
+?>

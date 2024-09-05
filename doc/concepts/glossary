@@ -1,0 +1,21 @@
+
+  GLOSSARY
+
+  task - a message passing finite state machine.
+
+  task ID - a non-negative, non-zero integer enumerated in [app]/host.h
+
+  internal message - an 8-byte internal communication.
+
+  process - an end-to-end cooperation of tasks governed by a director.
+
+  director - a task that governs a process.
+
+  secretary - a task that extends the functionality of a server,
+              typically providing a network slave to job translation.
+
+  client - a task requesting a service.
+
+  server - a task providing a service.
+
+  execution window - the time taken by a task to process a message.

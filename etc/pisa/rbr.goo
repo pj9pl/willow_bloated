@@ -1,0 +1,62 @@
+# ratio-bridge.goo
+#
+# Script to configure Pisa for ratiometric bridge measurements
+# comparing Ain12 and Ain13 with REFIN2(+) and REFIN2(-).
+# 
+# REFIN2(+) is connected to AVdd, REFIN2(-) is connected to PSW
+# Ain12 and Ain13 are connected to the mid points of the series resistors 
+# as normal for a bridge configuration.
+#-----------------------------------------------------------------------------
+# Begin with a reset.
+R
+#-----------------------------------------------------------------------------
+# read STATUS_REGISTER to clear the POR_FLAG
+0r
+#
+#
+#-----------------------------------------------------------------------------
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#                 REF_EN      = (0x01 << 8)           = 0x0100,
+#                 FULL_POWER  = (0x02 << 6)           = 0x0040,
+#                 CONTINUOUS_CONVERSION = (0x00 << 2) = 0x0000,
+#                 INTERNAL_CLK= (0x00 << 0)           = 0x0000.
+:y010180;
+#
+#-----------------------------------------------------------------------------
+# write IO_CONTROL_1 [p.82] with:-
+#                 PDSW = (0x01 << 15)    = 0x008000,
+:y03008000;
+#
+#-----------------------------------------------------------------------------
+# write CHANNEL_0 [p.88] with:-
+#                DISABLE = (0x00 << 15)    = 0x0000,
+#                AinM = AIN1 = (0x01 << 0) = 0x0000,
+:y090001;
+#
+#-----------------------------------------------------------------------------
+# write CHANNEL_1 [p.88] with:-
+#                 ENABLE = (0x01 << 15) = 0x8000,
+#                 SETUP  = (0x01 << 12) = 0x1000,
+#                 AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#                 AINM   = (0x0D << 0)  = 0x000D (decimal 13) pin Ain13.
+:y0A918D;
+#
+#-----------------------------------------------------------------------------
+# write CONFIG_1 [p.90] with:-
+#                 BIPOLAR  = (0x01 << 11) = 0x0800
+#                 REF_BUFP = (0x01 << 8)  = 0x0100
+#                 REF_BUFM = (0x01 << 7)  = 0x0080
+#                 AIN_BUFP = (0x01 << 6)  = 0x0040
+#                 AIN_BUFM = (0x01 << 5)  = 0x0020
+#                 int ref  = (0x02 << 3)  = 0x0010
+#                 PGA Gain = (0x00 << 0)  = 0x0000
+#:y1A09F0;
+:y1A0870;
+#
+#-----------------------------------------------------------------------------
+# write FILTER_1 [p.91] with
+#                 POST_FILTER = (0x03 << 17) = 0x060000,
+#                 FS = (0x780 << 0)          = 0x000780 (decimal 1920)
+:y228607FF;
+#
+

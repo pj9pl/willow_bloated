@@ -1,0 +1,104 @@
+
+  RTC
+
+  The RTC task is a device driver for an RV-3028-C7.
+ 
+  The Pimoroni PIM449 Real-Time Clock Module contains an RV-3028-C7 device
+  that connects to the I2C bus. The SCL, SDA and INTR signals, together with
+  VCC and GND constitute the interface. There is no connection to the EVENT
+  input, nor the CLOCK output.
+
+  The current operations consist of initialization and reading the unixtime.
+
+  Initialization amounts to setting the BSM field in the EEPROM BACKUP
+  register to ENABLE_DIRECT_SWITCHING, and setting the unixtime.
+  The Type 337 Silver Oxide 1.55v 8mAh backup battery is a primary cell
+  and therefore must not be subjected to a Trickle Charge. This is ensured
+  by the TCE bit (bit 5) in the EEBACKUP register (0x37) being set to 0.
+
+  The UNIXTIME register can be set from the AUX terminal on camel using:-
+      epoch > $port
+  This generates 'inp fido 1691470824N' which is interpreted by the CLI.
+
+  See also the datasheet RV-3028-C7.pdf.
+
+  Configuration.
+
+  -  The Trickle Charge must be disabled at all times as the backup battery
+     is a primary type 337, 1.55V, 8mAh. Therefore the TCE bit (#5) in the
+     EEBACKUP register (0x37) must be cleared before writing.
+
+  -  The Backup Switching Mode can be set to Direct Switching Mode as the
+     backup voltage is considerably lower than the 3.3V VDD. The BSM field
+     should be set to 01 to ENABLE_DIRECT_SWITCHING.
+
+     Bit 7 is the least significant bit of the 9-bit EEOFFSET value.
+     Bit 6 BSIE needs to be clear.
+     Bit 5 TCA  needs to be clear.
+     Bit 4 FEDE needs to be set.
+     Bit 3 BSM1 needs to be clear.
+     Bit 2 BSM0 needs to be set.
+     Bit 1 TCR1 needs to be clear.
+     Bit 0 TCR0 needs to be clear.
+
+     The 'inp fido 20P' command writes 0x14 to the EEBACKUP register.
+           ..     146P       ..        0x94             ..
+
+  -  Adjusting the EEOFFSET value.
+     Refer to the RV-3028-C7 Application Manual p.37.
+
+     The EEOFFSET value can be set within the range [-256..255]
+     using the [-]nnnR command.
+     
+     The EEOFFSET value can be printed using the r command.
+
+     With the EEOFSET value set to 255, the rtc advances at about 14.5ms / min.
+
+ Example usage:
+
+ ...
+
+ #include <time.h>
+ #include "sys/rtc.h"
+ #include "net/twi.h"
+ #include "net/i2c.h"
+
+ typedef struct {
+     ...
+     time_t now;
+     union {
+         twi_info twi;
+         ...
+     } info;
+     ...
+ } privatestorage_t;
+
+ static privatestorage_t this;
+
+ ...
+
+ PRIVATE void resume(void)
+ {
+    switch (this.state) {
+    ...
+    case CURRENT_STATE:
+        this.state = FETCHING_UNIXTIME;
+        sae2_TWI_MR(this.info.twi, RV3028C7_I2C_ADDRESS,
+                RV_UNIX_TIME_0, this.now);
+        break;
+
+    case FETCHING_UNIXTIME:
+        {
+            char store[26];
+            this.now -= UNIX_OFFSET;
+            ctime_r(&this.now, store); 
+            tty_puts(store);
+            ...
+        }
+        break;
+
+    ...
+    }
+ }
+
+

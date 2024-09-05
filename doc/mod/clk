@@ -1,0 +1,94 @@
+
+  CLK
+
+    The CLK task is a millisecond alarm clock which can provide a delay
+    from 1ms to several days. Actual times may vary. Accuracy is not
+    guaranteed.
+
+    When the alarm is registered adjacent alarms are checked for a minimum
+    spacing of 15 ticks and adjusted accordingly.
+
+    The CLK task is a jobbing server in all but name. SET_ALARM is equivalent
+    to JOB, and ALARM is equivalent to REPLY_INFO.
+ 
+  MESSAGES
+
+    SET_ALARM
+      convenience macro: sae_CLK_SET_ALARM(clk_info *cp, ulong_t millis)
+
+      A client sends a SET_ALARM request with a clk_info reference
+      containing a millisecond value. If the value is less than
+      MAX_MILLIS, the client receives an ALARM with an EOK result
+      when it expires, else the client receives an ALARM containing
+      an EINVAL result.
+
+      The MAX_MILLIS value represents the maximum number of ticks
+      that can be held in an unsigned long, minus a threshold.
+      It is inversly proportional to cpu frequency.
+
+        8MHz:      549755808 ~ 6 days,  8 hours
+        11.06MHz:  407226528 ~ 4 days, 17 hours
+        16MHz:     274877904 ~ 3 days,  4 hours
+
+      Calculation of MAX_MILLIS.
+         MAX_ULONG / F_CPU * PRESCALER * MILLIS_PER_SECOND - THRESHOLD
+         = 4294967295 / F_CPU * 1024 * 1000 - 1048576
+
+    ALARM
+
+      The ALARM reply contains a result and a job reference.
+      The job reference identifies that which has expired.
+
+    CANCEL
+      convenience macro: sae_CLK_CANCEL(clk_info *cp)
+
+      A client may cancel a pending alarm by sending a reference to
+      it in a CANCEL request. The REPLY_INFO reply contains either
+      EOK if it was cancelled or ENOENT if it was not found.
+
+      The CLK task deactivates the timer when there are no pending
+      alarms.
+
+      If many alarms were to expire at the same time, the fifo could
+      become full with subsequent messages being lost. To guard against
+      this, the expiry time is adjusted to be at least SPACING ticks
+      after the preceeding alarm, with each successive alarm being
+      checked similarly until a gap that exceeds SPACING is detected.
+
+      The millisecond value is converted to timer ticks upon arrival.
+      An extra tick is added to the result to ensure that the value
+      is greater than zero and to compensate for the partial first
+      tick and any rounding error in the calculation.
+
+      The overflow interrupt is masked whilst adjustments are performed.
+
+      If the new alarm is scheduled to expire before the headp, it is
+      placed at the head. If it is scheduled to expire before the next
+      overflow, TCNTn is set to MAX_COUNT - (ip->uval - now) and clk.ticks
+      is set to ip->uval.
+
+  THRESHOLD
+
+      When there is always at least one pending alarm, the value of the
+      internal ticks variable can increase to a point where the uval
+      conversion overflows. To guard against this, whenever a request
+      finds the ticks value above an arbitrary threshold, the ticks
+      variable is reduced to STEP_SIZE with the same amount subtracted
+      from each pending alarm.  The arbitrary threshold is currently set
+      at 0x00100000 (1048576).
+
+      This has the effect of depleting each uval over time until they
+      expire, whilst allowing a maximum value to be set in the interim.
+
+      The reduction of clk.ticks to STEP_SIZE ensures that any TCNTn
+      value can be subtracted with a positive result.
+
+  TIMER SELECTION
+
+      Any one of TIMER0, TIMER1 or TIMER2 may be used to override the
+      definition of CLK_TIMER in the application host.h file. The default
+      is TIMER0.
+
+      For long delays use the 16-bit TIMER1. This uses three times the
+      power of TIMER0 [p.482] but overflows 256 times less often.
+

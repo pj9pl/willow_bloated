@@ -1,0 +1,16 @@
+
+  FSU
+
+  The FSU task is a file system utilities server. It is an intermediary between
+  CLI on bali and FSD on oslo.
+
+  The CLI sends the complete command line to the FSU which tokenizes it into
+  an array of strings. The CLI specifies an opcode in the FSU_REQUEST that is
+  one of:-
+
+    OP_LS  ls
+    OP_MV  mv
+    OP_PWD pwd
+    OP_RM  rm, rmdir
+    OP_MK  create, mkdir
+

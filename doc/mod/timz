@@ -1,0 +1,16 @@
+
+  TIMZ
+
+  The TIMZ task is an iterative process director that reads the UTC from oslo
+  and sends it to a destination in a DATE_NOTIFY message.
+
+   This accepts START, STOP and SET_IOCTL messages where SIOC_SELECT_OUTPUT
+   specifys:-
+          0 = OFF
+          1 = LCD (sumo)
+          2 = OLED (jira)
+          3 = OLED (peru)
+          7 = GCALL (any/none)
+  
+   There is a heuristic one second interval that might indicate the
+   relative inaccuracy of the internal RC oscillator.

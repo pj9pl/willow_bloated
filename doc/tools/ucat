@@ -1,0 +1,6 @@
+
+  UCAT
+
+  Ucat is an unbuffered all-pass text filter. It is used to read characters
+  from the Bluetooth input port and write them to stdout.
+

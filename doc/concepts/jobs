@@ -1,0 +1,37 @@
+
+  JOBS
+
+  A JOB is a unit of work specified by an info structure, which is assigned
+  by a client to a server. The info structure is defined by a server and
+  declared by a client within its private storage. This enables a server to
+  operate directly upon the private storage of a client whereby an arbitrary
+  number of parameters may be passed between the interlocutors.
+
+  A job may involve several stages, during which it is unavailable to other
+  clients. To accomodate this situation, the info may include a queue element 
+  consisting of a next pointer and a replyTo field. The server appends each
+  job to its queue upon arrival. If the queue was empty the job is started
+  directly, otherwise it is postponed until the preceeding jobs have been
+  completed.
+
+  The CLK task job queue is ordered by expiry time, and not in first-come
+  first-served order.
+
+  When a job has been completed, the info is removed from the head of the
+  queue and sent back to the replyTo client in a REPLY_INFO. Upon receipt
+  the client can resume in the knowledge that the server has relinquished
+  control of the shared memory.
+
+  A client may declare multiple info structures within a union, provided
+  that no more than one is in use at any given time. Where jobs are to be
+  performed concurrently, separate info structures are required.
+
+  The submission of a job to a server commits the shared memory until a
+  reply is received. The client must not alter the contents of an info
+  structure whilst it is under the control of a server.
+
+  The CLK and TWI tasks provide a CANCEL message, since these can hold
+  the info for an extended period. In order to cancel a job, the client
+  must reference the same info structure that was sent previously, to
+  enable the server to compare the addresses.
+

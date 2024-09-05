@@ -1,0 +1,6 @@
+
+  VOLTAGEZ
+
+  The VOLTAGEZ task is a network secretary that receives VOLTAGE_NOTIFY
+  messages and forwards them to an LCD manager.
+

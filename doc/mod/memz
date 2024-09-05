@@ -1,0 +1,23 @@
+
+  MEMZ
+
+  The MEMZ task is a network secretary that provides remote read access
+  to the host SRAM in a combined transaction. The communication is unusual
+  in that it is of variable length. It is initialized at start-up by the
+  SYSINIT task and listens for a MEMZ_REQUEST message containing a 16-bit
+  address and a 16-bit length, and returns that number of bytes from that
+  address in a combined SR-ST transaction.
+
+  The client must provide the storage for both the request and reply.
+
+  Reserved I/O memory addresses are read as 0xB8 for some reason.
+  It would appear that the interrupt context has some bearing, as
+  dumping bali via the TWI loopback does not execute from within the
+  interrupt context, and they read as 0x00, or from 0xC7 to 0xFF, 0x30.
+
+  This task violates the mutual exclusion and privacy of other tasks.
+  Furthermore, reading some I/O locations can cause side effects.
+  for example if MEMZ were to read the USART receive buffer (0xC6)
+  when it contains an unread byte, the byte would be lost to the
+  intended recipient. [p.200,621]
+

@@ -1,0 +1,13 @@
+
+  SERIN
+
+  The SERIN task is a USART consumer that receives NOT_EMPTY messages from
+  the SER task and greedily collects characters into lines. When a newline
+  is read the line is sent to Bali's OSTREAM task.
+
+  Its purpose is to deliver the response from the HC-05 adapter to the gateway
+  when the HC-05 is in command mode.
+
+  It is enabled by a '1C' inp command and disabled by a '0C' inp command which
+  directs the SER task to either send the NOT_EMPTY messages to either SERIN or
+  INP.

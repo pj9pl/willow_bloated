@@ -1,0 +1,6 @@
+
+  MAP
+
+  The MAP task is a bitmap server. It accepts alloc and free requests for
+  imap and zmap bitmaps. It is used by MKNOD and UNLINK in the creation
+  and destruction of files and directories.

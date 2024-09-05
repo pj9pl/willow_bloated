@@ -1,0 +1,54 @@
+
+  ALBA CONFIG FILES
+
+  The ADC and DAC config files are held in /alba.
+   * There are some common preliminary stages:-
+ *  - reset the AD7124
+ *  - read the AD7124 status register
+ *  - write the AD7124 control register
+ *
+ *
+ * Patch 0: System noise measurement test. 
+ *
+ *  - set inputs to be bipolar Ain0 and Ain1  
+ *  - perform internal offset calibration
+ *
+ *
+ * Patch 1: Four unipolar inputs Ain12 Ain13 Ain14 Ain15.
+ *
+ *  - CALIBRATE internal or system-wide
+ *              internal sequence:-
+ *              1. If POWER_MODE is HIGH, set POWER_MODE to LOW or MID.
+ *              2. Select one channel.
+ *              3. Write the offset with 0x8000000.
+ *              4. Set OPERATING_MODE to INTERNAL_FULL_SCALE
+ *              5. Set OPERATING_MODE to INTERNAL_ZERO_SCALE
+ *
+ *
+ * Patch 2: Single channel unipolar input Ain12 corresponding to
+ *                                  MDAC channel A output.
+ *
+ *  - set inputs to be unipolar Ain12 and AVss, fed from MCP4728 V_OUT_A. 
+ *  - set filter
+ *  - set V_OUT_A to maximum
+ *  - perform gain calibration
+ *  - perform offset calibration
+ *  - set V_OUT_A to minimum
+ *
+ *
+ * Patch 3: Two bipolar inputs.
+ *
+ *   mdac-two-differential-bipolar.goo 
+ *   Ain12 (+) and Ain13 (-)
+ *   Ain14 (+) and Ain15 (-)
+ *
+ *
+ * Patch 4: Single channel unipolar input Ain12 corresponding to
+ *                                  MDAC channel A output.
+ *
+ *  - set inputs to be unipolar Ain12 and AVss, fed from MCP4728 V_OUT_A. 
+ *  - set filter
+ *  - perform offset calibration
+ */
+  
+

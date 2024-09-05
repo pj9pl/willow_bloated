@@ -1,0 +1,87 @@
+
+  FS
+
+  The operational requirements are for data files to be appended and
+  for configuration files to be read. There are no binary executables
+  or special files. File and directory names may be up to 14 characters
+  in length and contain only alphanumeric characters plus the period,
+  underscore and minus sign. A leading period denotes a hidden file.
+
+  The file system provides a hierarchical directory structure containing
+  regular files. The sectors of a file are contiguous which enables the
+  sector of any file location to be calculated directly from the inode,
+  and obviates any allocation overhead during a write operation. The number
+  of zones is specified when the file is created which allows the maximum
+  size of a file to be predetermined, avoiding any unexpected 'disk full'
+  situation. A 'file full' situation generates an EXFULL result which can
+  be anticipated.
+
+  The maximum partition size is limited to 32 megabytes by the 16-bit sector
+  number. The maximum directory size is limited to 256 items by the 8-bit
+  link count.
+
+  The High Capacity SDCard reads and writes whole sectors.
+
+  There are two sector buffers, sd_admin and sd_datum. The sd_admin buffer
+  is used by the FSD secretary for reading and administrative  operations.
+  The sd_datum buffer is used by the RWR secretary for file write operations.
+  
+  The number 0 is used to indicate an invalid inode number and zone number.
+  The 16 sectors in zone 0 contains the bootblock, superblock, inode bitmap
+  and zone bitmap each in a single sector, followed by the inode table which
+  occupies the remaining 12 sectors, providing storage for 383 inodes.
+
+  The zone bitmap occupies a single sector. The 4096 bits in 512 bytes
+  provides for a zone size of 8192 bytes. The 16-bit sector numbers limits
+  the partition to 65536 sectors, which equates to 33,554,432 bytes.
+ 
+  The zones of a regular file are allocated when the file is created.
+  This provides contiguous sectors which keeps the read and write processes
+  simple enough to be feasible. The write process in particuular needs to be
+  kept as simple as possible in order to provide a low overhead service.
+  The contiguous sectors dispense with the indirect zone tables and the
+  effort required to locate the next sector during a write operation.
+
+  A file is neither opened nor closed. A file is referenced by its inode number.
+  The corresponding inode is updated whenever a file is written. This could
+  be during a read operation. The onus is upon the read operation to maintain
+  a current copy of the inode.
+
+  The partition has a maximum size of 33,554,432 bytes (32MB),
+  The partition type is 0xFA (250 decimal).
+  The partition should be primary.
+
+  The partition format:-
+  |<--------------- zone 0 ------------------>|<------ zone 1 ----->|<-------S
+  |<------- 4 sectors -------->|<-- 12 sect ->|<---- 16 sectors --->|<-------S
+  ---------------------------------------------------------------------------S
+  | BOOT | SUPER | IMAP | ZMAP | ITABLE ....  | ROOT DIRECTORY .... | 
+  ---------------------------------------------------------------------------S
+
+  The BOOT sector contains the bytes: DE:AD BE:EF.
+
+  The SUPER sector contains the bytes: 80:01:00:0F 00:06:02:02 FE:CA.
+  This translates, in little-endian representation as:-
+       384       =  number of inodes (including the invalid inode 0)
+       4096      =  number of zones
+       33687040  =  maximum file size (greater than the partition size!)
+       0xCAFE    =  magic number
+         
+  The IMAP sector contains the inode allocation bitfield.
+
+  The ZMAP sector contains the zone allocation bitfield.
+
+  The ITABLE contains the inodes.
+
+  Inodes.
+
+  An inode is a 16-byte data record that holds information pertaining
+  to an allocated region within the data part of the partition.
+
+ -----------------------------------------------------------------------------
+ | i_mode | i_links | i_num  |    i_size    |   i_mtime    | i_zone |i_nzones|
+ -----------------------------------------------------------------------------
+     1         1        2            4              4           2        2
+
+-------------------------------------------------------------------------------
+

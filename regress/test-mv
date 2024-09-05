@@ -1,0 +1,128 @@
+#!/usr/bin/env php
+<?php
+
+/* test-mv - test the mv CLI command
+ * usage: test-mv [-p $port] 
+*/
+
+class TestMv {
+
+    function main($argv, $argc) {
+        $portin = 0;
+        $portout = 0;
+        $n = 0;
+
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portin = fopen($argv[$i + 1], "r");
+                        $portout = fopen($argv[$i + 1], "w");
+                    }
+                }
+            }
+        }
+
+        if ($portin == 0 && $portout == 0) {
+            $arg = getenv("port");
+            if ($arg) {
+                $portin = fopen($arg, "r");
+                $portout = fopen($arg, "w");
+            }
+        }
+
+        $fruits = array ( array ("cd /",                 "ok" ),
+                          array ("mkdir junk",           "ok" ),
+                          array ("mkdir junk/bar",       "ok" ),
+                          array ("cd junk/bar",          "ok" ),
+                          array ("pwd",                  "/junk/bar" ),
+                          array ("mk foo",               "ok" ),
+                          array ("mv foo ..",            "ok" ),
+                          array ("mv /junk/foo .",       "ok" ),
+                          array ("cd /junk/bar",         "ok" ),
+                           /* test moving a file to itself: EEXIST */
+                          array ("mv /junk/bar/foo .",   "(17)" ),
+                          array ("rm foo",               "ok" ),
+                          array ("cd ../..",             "ok" ),
+                           /* test moving a directory to itself: EPERM */
+                          array ("mv junk junk/bar",     "(1)" ),
+                          array ("mk foo",               "ok" ),
+                           /* test ENAMETOOLONG */
+                          array ("mv foo junk/rumpelstiltskin",  "(36)" ),
+                          array ("mv foo name!",         "(22)" ),
+                          array ("mv foo name\"",        "(22)" ),
+                          array ("mv foo name£",         "ok" ),
+                          array ("mv name foo",          "ok" ),
+                          array ("mv foo name$",         "(22)" ),
+                          array ("mv foo name%",         "(22)" ),
+                          array ("mv foo name^",         "(22)" ),
+                          array ("mv foo name&",         "(22)" ),
+                          array ("mv foo name*",         "(22)" ),
+                          array ("mv foo name(",         "(22)" ),
+                          array ("mv foo name)",         "(22)" ),
+                          array ("mv foo name_",         "ok" ),
+                          array ("mv name_ foo",         "ok" ),
+                          array ("mv foo name-",         "ok" ),
+                          array ("mv name- foo",         "ok" ),
+                          array ("mv foo name+",         "(22)" ),
+                          array ("mv foo name=",         "(22)" ),
+                          array ("mv foo name{",         "(22)" ),
+                          array ("mv foo name}",         "(22)" ),
+                          array ("mv foo name[",         "(22)" ),
+                          array ("mv foo name]",         "(22)" ),
+                          array ("mv foo name'",         "(22)" ),
+                          array ("mv foo name~",         "(22)" ),
+                          array ("mv foo name#",         "(22)" ),
+                          array ("mv foo name\\",        "(22)" ),
+                          array ("mv foo name|",         "(22)" ),
+                          array ("mv foo name,",         "(22)" ),
+                          array ("mv foo name<",         "(22)" ),
+                          array ("mv foo name.",         "ok" ),
+                          array ("mv name. foo",         "ok" ),
+                          array ("mv foo name?",         "(22)" ),
+                          array ("rm foo",               "ok" ),
+                          array ("rmdir junk/bar",       "ok" ),
+                          /* test the failure of moving two files
+                           * to a file destination: ENOTDIR
+                           */
+                          array ("mk foo",               "ok" ),
+                          array ("mk bar",               "ok" ),
+                          array ("mk junk/delta",        "ok" ),
+                          array ("mv foo bar junk/delta", "(20)" ),
+                          array ("rm junk/delta",        "ok" ), 
+                          array ("mkdir junk/delta",     "ok" ),
+                          array ("mv foo bar junk/delta", "ok" ),
+                          array ("rm junk/delta/foo",    "ok" ),
+                          array ("rm junk/delta/bar",    "ok" ),
+                          array ("rmdir junk/delta",     "ok" ),
+                          array ("rmdir junk",           "ok" ),
+                        );
+
+        if ($portin && $portout) { 
+
+            foreach ($fruits as $fruit) {
+                $n++;
+                fprintf(STDOUT, "%2d %-40s ", $n, $fruit[0]);
+                fflush(STDOUT);
+                fputs($portout, $fruit[0] . "\n");
+                $response = fgets($portin);
+                if (strcmp($response, $fruit[1] . "\n") != 0) {
+                    fputs(STDERR, "expected '" . $fruit[1] . "', got " .
+                                                                  $response);
+                    exit(1);
+                } else {
+                    fprintf(STDOUT, "%-15s passed\n", $fruit[1]);
+                }
+            }
+
+            print("all tests succeeded\n");
+
+            fclose($portin);
+            fclose($portout);
+        }
+    }
+}
+
+$foo = new TestMv;
+$foo->main($argv, $argc);
+?>

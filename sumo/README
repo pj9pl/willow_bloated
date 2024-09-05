@@ -1,0 +1,19 @@
+Sumo is an application for the ATmega328P microcontroller.
+
+It manages a 2 line 16 character LCD display via an 8-bit parallel interface.
+It is connected to the other mpus via the TWI.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril sumo
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and sumo
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../sumo && make avp)
+

@@ -1,0 +1,6 @@
+
+  VITZ
+
+  The VITZ task  is an iterative process director that reads the core
+  temperature and internal reference voltage with respect to the AVCC,
+  then sends the results to a destination in a VITZ_NOTIFY message.

@@ -1,0 +1,22 @@
+
+  ICSP
+
+  The ICSP task is an in-circuit serial programmer. It is available on both
+  bali and iowa, which allows access to all hosts. It can be used to program
+  the application, bootloader, fuses and lock bits, via the SPI whilst the
+  target device is held in reset.
+
+  The target's bootloader switch can be a source of confusion. When it is
+  closed, the target is directed into the bootloader main loop when bali's
+  ICSP releases the /RESET pin. When it is open the target executes the
+  application, if it exists.
+
+  The bt_tee_sender.sh script executes in the sending terminal.
+  This maintains the bluetooth connection during the operation.
+
+  The avp(1) program is used to feed an Intel hex file to ICSP.
+
+  For example, from within bali or iowa source directory, type:-
+
+  $ (cd ../peru && make avp)
+

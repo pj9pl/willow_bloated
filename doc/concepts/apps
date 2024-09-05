@@ -1,0 +1,39 @@
+
+  APPS
+
+  An app is a single image written to a specific MCU.
+
+  It compiles library files according to its own definitions.
+
+  Manifest.
+
+  Tha app directory contains the source files that differ in some way that
+  cannot be shared with other apps.
+
+  The lib directory contains files that can be shared with other apps.
+
+  Using GNU make, the vpath definition enables a *.c file in the app
+  directory to override a *.c file with the same name in the lib directory,
+  This allows a bespoke version to be built in preference to a generic
+  version in the library, whilst in the absence of a bespoke file, the generic
+  version in the library is selected.
+
+  This is convenient if print statements are added, where other hosts need not
+  be disturbed.
+
+  Each app has:-
+    host.h
+    inp.c
+    main.c
+    Makefile
+    README
+    README.commands
+    syscon.c
+    sysinit.c
+    ver.c
+
+  Additionally, an external host has:-
+
+    cli.c
+    defs.sh
+

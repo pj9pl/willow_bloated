@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+/* hexfilter - transform a hexadecimal count value into the corresponding
+               decimal representation.
+               usage: ./hexfilter <file.outf >file.vs
+*/
+
+class HexFilter {
+
+    function main($argv, $argc) {
+
+        $hexstr = "0";
+        $vval = 0;
+
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "%s", $hexstr) == 1) {
+                $vval = hexdec($hexstr);
+                print($vval);
+                print("\n");
+            }
+        }
+    }
+}
+
+$foo = new HexFilter;
+$foo->main($argv, $argc);
+?>

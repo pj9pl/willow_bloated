@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ hextime
+     usage: hextime hex ...
+
+     example: hextime 6652AAEE
+*/
+
+class HexTime {
+
+    function main($argv, $argc) {
+        $argp = 1;
+        while ($argp < $argc) {
+            print(strftime("%F %T",hexdec($argv[$argp++])) . "\n");
+        }
+    }
+}
+
+$foo = new HexTime;
+$foo->main($argv, $argc);
+?>

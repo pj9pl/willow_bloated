@@ -1,0 +1,3 @@
+#!/bin/sh
+# list-bss
+avr-nm -S -n --size-sort *.elf|grep '^0080'|sort

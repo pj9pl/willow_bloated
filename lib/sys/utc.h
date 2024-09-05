@@ -1,0 +1,72 @@
+/* sys/utc.h */
+
+/* Copyright (c) 2024 Peter Welch
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+   * Neither the name of the copyright holders nor the names of
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#ifndef _UTC_H_
+#define _UTC_H_
+
+#ifndef _MAIN_
+
+/* op codes */
+#define GET_TIME 1
+#define GET_UPTIME 2
+#define GET_BOOTTIME 3
+#define SET_TIME 4
+
+#define FRAC_TO_MILLIS(x) ((long)(x) * 1000 >> 8)
+
+typedef struct {
+    ProcNumber taskid;      /* task level addressing */
+    uchar_t op;             /* op code */
+    ulong_t val;            /* seconds */
+} utc_request;
+
+typedef struct {
+    ProcNumber taskid;      /* task level addressing */
+    uchar_t result;         /* operation result: EOK or ENOSYS */
+    ulong_t val;            /* seconds */
+    uchar_t frac;           /* fractional part */
+} utc_reply;
+
+typedef union {
+    utc_request request;
+    utc_reply reply;
+} utc_msg;                  /* 7 bytes */
+
+PUBLIC time_t get_utc(void);
+
+#else /* _MAIN_ */
+
+PUBLIC void config_utc(void);
+PUBLIC uchar_t receive_utc(message *m_ptr);
+
+#endif /* _MAIN_ */
+
+#endif /* _UTC_H_ */

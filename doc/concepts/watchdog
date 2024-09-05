@@ -1,0 +1,15 @@
+
+  WATCHDOG
+
+  The watchdog timer [p.60] is used to reset the device if a task does
+  not complete the processing of a message within a specified period.
+
+  If a particular operation may exceed the timeout limit, a task may disable
+  the watchdog timer. For example the blank check operation in the HVPP task.
+
+  The watchdog timer is disabled during idle mode whilst waiting for a message
+  to arrive. The interrupt context is not protected during this state.
+
+  The watchdog interrupt can be enabled by #defining WDT_DUMP to a non-zero
+  value in [app]/host.h. This is configured in sys/msg.c to dump the SRAM to
+  the USART0 peripheral.

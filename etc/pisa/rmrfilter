@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ rmrfilter - transform a decimal count value into the corresponding
+             resistance value
+             usage: ./rmrfilter [-b] <file.outf >file.vs
+                      -b don't show count value, just the resistance.
+*/
+
+class RmrFilter {
+
+    function main($argv, $argc) {
+    //    $max = 16777215;
+        $ref = 50000;
+        $max = 0xFFFFFF +1; // 16777215 +1
+        $bare = False;
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-b")
+                    $bare = True;
+            }
+        }
+
+        $hexstr = "0";
+
+        $vval = 0;
+
+        $countval = 0;
+
+        while ($f = fgets(STDIN)) {
+            if (sscanf($f, "%d", $vval) == 1) {
+                print(($ref * $vval) / $max);
+                print("\n");
+            }
+        }
+    }
+}
+
+$foo = new RmrFilter;
+$foo->main($argv, $argc);
+?>

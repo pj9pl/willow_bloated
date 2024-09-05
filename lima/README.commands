@@ -1,0 +1,36 @@
+# lima/README.commands
+
+<nnn> C : Set the OLED contrast to a value in the range [0..255]
+
+c : print cycle count
+
+e : print build ident
+
+i : send INIT to OLED
+
+0j : OLED turn display off
+1j : OLED turn display on
+2j : OLED clear display
+3j : OLED illuminate all pixels
+4j : OLED illuminate selected pixels
+5j : OLED normal illumination
+6j : OLED reverse illumination
+
+<nn> l : OLED set display line start [0..63]
+
+<x1,y1,x2,y2,rop,inh> L : OLED draw a line from x1,y1 to x2,y2
+                rop:       1 = SET
+                           2 = XOR
+                inhibit:   0 = FALSE
+                           1 = TRUE
+
+0o : OLED place the y origin at bottom
+1o : OLED place the y origin at top
+2o : OLED place the x origin at left
+3o : OLED place the x origin at right
+
+0z : TTY output to local SER
+1z : TTY output to GATEWAY OSTREAM
+2z : TTY output to TWI_OLED_HOST OSTREAM
+3z : TTY output to SPI_OLED_HOST OSTREAM
+

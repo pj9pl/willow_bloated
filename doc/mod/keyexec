@@ -1,0 +1,15 @@
+
+  KEYEXEC
+
+  The KEYEXEC task is a process director task that receives issues READ
+  messages to KEYPAD and receives BUTTON_CHANGE messages when the transition
+  occurs.
+
+  It contains a 16-element table corresponding to the up and down transitions
+  of eight buttons. When a BUTTON_CHANGE message is received, a message is
+  sent to the SETUPD secretary on pisa to load a particular patchfile.
+
+  KEYEXEC is initialized by KEYCONF which provides button associations.
+
+  BUTTON_CHANGE actions are ignored whilst a SETUPD request is in progress.
+

@@ -1,0 +1,38 @@
+
+  STACK USAGE
+
+  The stack is minimised prior to each message being processed,
+  by dint of the locus of execution returning to the main function.
+
+  GCC can generate a stack usage listing for each source file,
+  suffixed with .su, by adding -fstack-usage to CFLAGS.
+
+  The stack memory is initialized with the value 0xAA so that a
+  high water mark is recorded over the course of operations:- 
+
+    memset(&__heap_start, 0xAA, (SP - 4) - (ushort_t) &__heap_start);
+
+  A dump of the SRAM can provide an indication of the stack usage
+  by its alteration from the initial 0xAA value. For example:-
+
+    dump peru 800 +100
+
+    0800 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0810 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0820 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0830 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0840 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0850 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0860 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA
+    0870 AA:AA:AA:AA AA:AA:AA:AA AA:AA:AA:AA AA:0F:A4:08
+    0880 CF:00:00:7F FF:08:B9:00 00:00:12:75 00:00:2D:48
+    0890 08:95:08:96 27:63:38:32 30:32:00:00 02:08:A2:FF
+    08A0 FD:26:46:00 32:08:B8:06 BD:01:05:11 92:D5:A4:3D
+    08B0 88:46:C7:58 2C:E7:BF:2D 74:D0:06:24 0E:FF:7F:04
+    08C0 1B:0E:0B:0F 00:DA:DA:03 13:08:DC:04 1B:0E:07:0F
+    08D0 00:DA:06:03 FC:07:0D:4E 08:F3:01:03 01:0A:FE:0F
+    08E0 A4:01:E1:08 F4:01:40:01 08:00:0F:18 29:20:22:00
+    08F0 03:BB:28:1D 08:07:0F:00 E1:01:00:00 08:FF:03:30
+
+  Here we can see that peru's stack has descended 131 bytes to location 0x87D.
+

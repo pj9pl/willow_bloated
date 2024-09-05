@@ -1,0 +1,29 @@
+
+  PUT
+
+  The PUT task is a subsidiary command of the CLI. It is used to transfer a
+  text file from the external environment to the current working directory
+  of the SD card on oslo.
+
+  The PHP script 'putfile' can be used to perform the operation and coordinate
+  the EOF marker.
+
+  The CLI 'put' command is of the form :-
+
+    put -t filename keyword
+
+  or :-
+
+    put filename keyword
+
+  A -t causes the file to be truncated before writing.
+
+  The maximum line length is 256 bytes.
+
+  The task emits a '.' without a newline to prompt the user to enter a line.
+  When the line has been entered, the user waits until it receives a '.'
+  before entering the next line.
+
+  A line beginning with the keyword causes the task to terminate.
+  The remainder of the line is discarded. 
+

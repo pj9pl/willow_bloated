@@ -1,0 +1,38 @@
+
+  AVP
+
+  avp is used to reprogram an ATmega328P with ICSP or HVPP.
+
+  usage: avp [-p port]
+             [-k lockbits]
+             [-l lowfuses]
+             [-h highfuses]
+             [-e extendedfuses] 
+             [-r flash_readbackfilename] 
+             [-s eeprom_readbackfilename] 
+             [-c] chip erase
+             [file.hex]
+
+  Lockbits, lowfuses, highfuses and extendedfuses are specified using two
+  hexadecimal characters prefixed with '0x'.
+
+  The lock bits and extended fuses remain unprogrammed.
+  The fuse values are described in the ATmega328P datasheet on pages 275-293.
+
+  The low fuses differ only in the system clock:-
+       0xCF - 11.06 MHz external resonator
+       0xE2 - 8 MHz internal RC osc
+
+  The high fuses differ only in the bootloader size:-
+       0xDC - twiboot 1024 bytes start at 7C00
+       0xDE - optiboot 512 bytes start at 7E00
+
+  Example 1. 11.06 MHz external resonator, optiboot bootloader:-
+  $ avp -l 0xCF -h 0xDE -r readback.hex ../bali/image.hex
+
+  Example 2. 8 MHz RC internal oscillator, twiboot bootloader:-
+  $ avp -l 0xE2 -h 0xDC -r readback.hex ../fido/image.hex
+
+  Example 3. 11.06 MHz external resonator, twiboot bootloader:-
+  $ avp -l 0xCF -h 0xDC -r readback.hex ../iowa/image.hex
+

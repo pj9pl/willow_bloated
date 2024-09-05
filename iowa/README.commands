@@ -1,0 +1,22 @@
+# iowa/README.commands
+
+1B : set SER baudrate to 9600
+2B : set SER baudrate to 19200
+3B : set SER baudrate to 38400
+4B : set SER baudrate to 57600
+5B : set SER baudrate to 115200
+6B : set SER baudrate to 230400
+
+c : print cycle count
+
+0C : set SER consumer to INP
+1C : set SER consumer to SERIN -> OSTREAM@BALI
+
+e : print build ident
+
+1L : run ICSP
+
+0z : TTY output to local SER
+1z : TTY output to GATEWAY OSTREAM
+2z : TTY output to TWI_OLED_HOST OSTREAM
+3z : TTY output to SPI_OLED_HOST OSTREAM

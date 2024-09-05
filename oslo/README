@@ -1,0 +1,19 @@
+Oslo is an application for the ATmega328P microcontroller.
+
+Oslo provides a simple file system and a UTC seconds counter.
+It is connected to other mpus via the TWI.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril oslo
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and oslo
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../oslo && make avp)
+

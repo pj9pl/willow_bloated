@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ Epoch - print the current UNIX timestamp and a newline character.
+         The output should be presented to bali's
+         CLI interface so that the 'inp fido' prefix can be interpreted
+         correctly. Ensure that camel is connected and synchronized.
+
+         usage: epoch >$port
+*/
+
+class Epoch {
+
+    function main($argv, $argc) {
+        $prefix = "inp fido ";
+        $suffix = 'N';
+        $prev = time();
+        while (1) {
+            $now = time();
+            if ($prev != $now) {
+                echo $prefix . $now . $suffix . "\n";
+                break;
+            }
+        }
+    }
+}
+
+$foo = new Epoch;
+$foo->main($argv, $argc);
+?>

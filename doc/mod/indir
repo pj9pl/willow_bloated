@@ -1,0 +1,6 @@
+
+  INDIR
+
+  The INDIR task is used to resolve an inode number to a directory name.
+  It is used by PWD. It cannot be used reliably with file names as there
+  may be linked files that share the same inode number.

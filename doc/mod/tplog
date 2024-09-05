@@ -1,0 +1,11 @@
+
+  TPLOG
+
+  The TPLOG task is an iterative process director that reads the BMP180
+  barometric sensor and writes the pressure and temperature measurements to
+  the SDCard situated on oslo at six minute intervals until a STOP message
+  is received.
+
+  It receives an INIT message at start-up. If the bootloader switch is open,
+  the process is started. If it is closed, the process is not started, but
+  SYSINIT gets an EOK never the less.

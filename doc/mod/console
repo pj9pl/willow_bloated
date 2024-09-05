@@ -1,0 +1,13 @@
+
+  CONSOLE
+
+  The CONSOLE task is a network secretary that accepts OSTREAM_REQUEST
+  messages and presents them on an OLED screen as a series of lines.
+  
+  This waits for an OSTREAM_REQUEST message containing a string to arrive via
+  the TWI, and then sends the string to the OLED device, manipulating the
+  LINESTART_SETTING and y position to simulate a scrolling screen. A cursor
+  maintains the current insertion point. Long lines are wrapped. A newline
+  character moves the cursor to the beginning of the next line. A newline
+  at the lastline causes the screen to scroll up.
+

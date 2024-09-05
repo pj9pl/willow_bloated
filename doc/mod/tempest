@@ -1,0 +1,13 @@
+
+  TEMPEST
+
+  The TEMPEST task is an iterative process director that reads the BMP180 and
+  sends the values to an output device in a BAROMETER_NOTIFY message.
+
+  The output device is selected by:-
+         send_SET_IOCTL(TEMPEST, SIOC_SELECT_OUTPUT, selection);
+         1: SARK
+         2: JIRA
+         3: PERU
+         7: GENERAL CALL
+     

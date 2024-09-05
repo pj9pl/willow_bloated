@@ -1,0 +1,26 @@
+
+  ALBA
+
+  Alba is a suite of tasks that control the external ADC and DAC.
+  These are:-
+    alba.c    - ADC SPI interface
+    cache.c   - static look-up table
+    egor.c    - ADC reader
+    fritz.c   - initializer
+    mdac.c    - DAC I2C interface
+    ramp.c    - iterative DAC contol
+    patch.c   - config file executor
+    setupd.c  - config file secretary
+    stairs.c  - iterative DAC and ADC control
+
+  Config files.
+
+      I
+      C
+      R,0x00
+      W,0x01,0x0148
+      W,0x09,0x8001
+      W,0x01,0x0154
+      C
+      W,0x19,0x09E0
+

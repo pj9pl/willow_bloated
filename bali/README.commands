@@ -1,0 +1,83 @@
+# bali/README.commands
+
+------------------------- INP mode -------------------------------
+
+a : enter CLI mode
+
+0B : set TTY cooked mode
+1B : set TTY raw mode
+
+c : print cycle count
+
+e : print build ident
+
+1L : run ICSP
+
+q : generate external reset
+
+999W : generate a watchdog reset
+
+------------------------ CLI commands ---------------------------
+
+alba <path>        ---------  load alba config file <path>
+
+blswitch <host>    ---------  display status of the bootloader switch on <host>
+
+boottime [-c]      ---------  display the UTC boottime on oslo [-c ctime]
+
+cat <path>         ---------  read <path> to the gateway
+
+cd <dir>           ---------  change the current working directory to <dir>
+
+cycles <host>      ---------  display the number of processed messages, fifo
+                              depth, unrecognised messages on <host>.
+                              A non-zero unrecognised messages value indicates
+                              a problem.
+
+date               ---------  print the current UTC
+
+dump <host> [[start] [+length | end]] --- dump <host> SRAM memory
+
+exit               ---------  exit CLI mode and return to INP mode
+
+hc05 <host> [on|off] -------  control <host> Bluetooth adapter
+
+icsp               ---------  run the in-circuit serial programmer
+
+inp <host> <string> --------  send <string> to the INP task on <host>
+
+isp <host>         ---------  run the in-system programmer on <host>
+
+key <path>         ---------  load key config file <path>
+
+last [-c] <host>   ---------  display the boot time of <host> [-c ctime]
+
+ls [-ail] [items]  ---------  list directory items
+
+mk [nzones] <file> ---------  make <file> with [nzones] - default 1 zone
+
+mkdir <dir>        ---------  make <dir>
+
+mkfs               ---------  erase and remake a file system
+
+ping <host>        ---------  test the presence of <host>
+
+print <host> <string> ------  send <string> to the OSTREAM on <host>
+                              send a HC-05 AT command <string> to <host>
+
+put [-t] <file> <EOF> ------  put [-t truncate] lines to <file> until <EOF>
+
+quit               ---------  disconnect bt_tee_sender.sh, saving history 
+
+reboot <host>      ---------  activate an external reset on <host>
+
+rm <path>          ---------  unlink <path>
+
+rmdir <dir>        ---------  unlink <dir>
+
+sector <number>    ---------  read sector <number> into the sd_admin buffer
+
+setup <host> <nn>  ---------  apply setup <nn> to <host>
+
+up [-c]            ---------  display UTC reset time
+

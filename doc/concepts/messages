@@ -1,0 +1,135 @@
+
+  MESSAGES
+
+  There are three kinds of message: request, reply and notification. The
+  difference being that a request expects a reply, a reply is in response
+  to a request, and a notification is unsolicited but anticipated by the
+  receiver. Neither a reply nor a notification warrent a reply.
+
+  A message may be internal or external. An internal message is sent from
+  one task to another within the same host, whereas an external message is
+  sent from a task on one host to a task on another host via the TWI.
+
+  --
+
+  Internal Messages
+
+  An internal message is eight bytes long. The first three bytes are the
+  sender ID, the receiver ID and the opcode. The remainder are defined 
+  according to the opcode.
+
+  There are five message formats:-
+
+   -------------------------------------------------------------------------
+   | sender |receiver| opcode |   --   |   --   |   --   |   --   |   --   |
+   -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
+   | sender |receiver| opcode | mtype  |   --   |   --   |   --   |   --   |
+   -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
+   | sender |receiver| opcode |   --   | LSB  void*  MSB |   --   |   --   |
+   -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
+   | sender |receiver| opcode | mtype  | LSB  void*  MSB |   --   |   --   |
+   -------------------------------------------------------------------------
+   -------------------------------------------------------------------------
+   | sender |receiver| opcode | mtype  | LSB       unsigned long       MSB |
+   -------------------------------------------------------------------------
+
+  Fields marked -- remain at zero.
+  The blank mtype field in message format 3 acts as an implicit EOK value.
+
+  The send_OPCODE() macros in msg.h map each opcode to the correct arguments.
+
+  Messages are inserted into a fifo buffer so that they are processed in the
+  order in which they occur. The main loop extracts each message from the fifo
+  and delivers it to the destination via its receive function.
+
+  The fifo is bounded and deemed reliable, in that an internal message must
+  not fail to be sent. This can occur if the fifo overflows, therefore the
+  fifo must not overflow. A general principle is that no more than one request
+  should be sent during a message cycle. There are exceptions to this, but if
+  each task were to send multiple requests during each message cycle, the fifo
+  would soon overflow. The single request principle makes it easier to predict
+  what reply can be expected: if two requests are sent, two replies are to be
+  expected, with the added complexity of differentiation. Where two requests
+  are deemed necessary, perhaps the algorithm should be reconsidered.
+
+  In addition to the single request, a reply may also be sent, as in the case
+  where one job is completed and the next job in the queue is started. This is
+  normal protocol and allowance has to be made in the size of the fifo.
+
+
+  Requests and Replies.
+
+      request             reply
+
+      INIT          ...   REPLY_RESULT
+      TERM          ...   REPLY_RESULT
+      START         ...   REPLY_RESULT
+      STOP          ...   REPLY_RESULT
+      SET_IOCTL     ...   REPLY_RESULT
+      GET_IOCTL     ...   REPLY_DATA
+      JOB           ...   REPLY_INFO
+      CANCEL        ...   REPLY_INFO
+      RDY_REQUEST   ...   ADC_RDY
+      SET_ALARM     ...   ALARM
+      READ_BUTTON   ...   BUTTON_CHANGE
+
+  --
+
+  External Messages
+
+  External messages are carried by the TWI between connected hosts. These may
+  vary in length, and may fail to be sent.
+
+  The delivery status is sent in the internal reply to the TWI client, enabling
+  the client to resume. The MT|MR mode provides data in the same transaction,
+  whereas MT|SR mode provides data in a subsequent transaction.
+
+  Notification.
+
+    Notification between a master and one or more slaves, where a master
+    sends a transmission and receives no reply. The general call address
+    can be used to broadcast to multiple slaves.
+
+    The GC message acknowledgement is inconclusive in that the sender can
+    only deduce that at least one slave has received the transmission. Any
+    host that failed to receive is silently ignored. Only a message addressed
+    to a single slave can provide conclusive acknowledgement of delivery.
+
+  Combined transaction.
+
+    Where the server can satisfy the request instantaneously, the reply can
+    be provided by a restart, where the client performs a MT-MR transaction
+    and the server performs a SR-ST transaction. The UTC and the MEMZ servers
+    perform combined transactions.
+ 
+  Peer exchange.
+
+    Many hosts provide services that accept a request and send a reply at some
+    later time. To facilitate this operation, the client provides a five byte
+    administrative prologue that the server can use to ensure that the reply
+    is sent to the correct client.
+
+    -------------------------------------------------S
+    | service | taskid |     jobref     |  haddr |  ...   
+    -------------------------------------------------S
+
+    There are two parties to the exchange: the client and the server.
+
+    The client sends a request and receives a reply. This is accomplished
+    within a single MTSR message.
+
+    The server receives a request and sends a reply. This is accomplished
+    using two separate messages: an SR message to receive the request and
+    an MT message to send the reply. The transaction is actually an SRMT
+    sequence, the operation being initiated by the reception of a request
+    and completed by the transmission of the reply. The SR message specifies
+    the taskid as ANY in order to receive from any task, and in the reply it
+    specifies the taskid and jobref tht the client provided in the request
+    so that the reply is delivered to the correct client.
+
+    The FSU, FSD, and RWR secretaries provide numerous examples of this
+    exchange.
+

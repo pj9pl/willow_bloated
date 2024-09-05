@@ -1,0 +1,9 @@
+
+  TEMPERATUREZ
+
+  The TEMPERATUREZ task is a network secretary the receives TEMPERATURE_NOTIFY
+  messages on behalf of the LCD.
+
+  Each message contains an mtype byte and an unsigned long. The mtype byte
+  describes the unsigned long.
+

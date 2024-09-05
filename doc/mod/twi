@@ -1,0 +1,102 @@
+
+  TWI
+
+  The TWI task is a device driver for the Two Wire Interface which can
+  provide a multiple-master network between similarly equipped devices.
+
+  There are three use cases:-
+
+    - Notification between a master and one or more slaves, where a
+      master sends a transmission and receives no reply. The general
+      call address can be used to broadcast to multiple remote slaves.
+
+    - Combined transaction between a master and slave, where a master
+      sends an initial transmission, then restarts in master receive
+      mode where the slave transmits data to the master.
+
+    - Peer exchange between a master and slave, where a master sends a
+      request to a slave, then the roles are reversed with the master
+      becoming the slave and the slave becoming the master in order to
+      send a reply.
+
+    In all three cases the server must register with the TWI in order to
+    provide the service that the client seeks to engage. This is normally
+    performed during start-up by the SYSINIT task, with each server being
+    listed in its inittab, which causes an INIT message to be sent to each
+    member. These servers are referred to as network secretaries.
+
+
+  The client and server may be on the same device, in which case a loopback
+  operation is performed. There are two differences with this arrangement.
+  Firstly, the general call address cannot be serviced, and secondly the
+  server operation is performed from within the application context, whereas
+  the remote server operation is performed from within the interrupt context.
+
+  The TWI task accepts JOB and CANCEL messages. There are fourteen
+  JOB convenience macros that the client may use to ensure that the
+  correct parameters are set for a particular mode of operation.
+  There is one CANCEL convenience macro to terminate a pending operation.
+
+  There are fourteen JOB convenience macros arranged as seven pairs, where each
+  pair consists of a sae1_ and sae2_. The sae1_ macro is used for a pointer
+  and count where the count cannot be derived from the pointer, whereas the
+  sae2_ macro is used for a static buffer where the count can be derived from
+  the pointer at compilation time using the sizeof() operator.
+
+    sae1_TWI_MT(a,b,c,d,e)
+    sae2_TWI_MT(a,b,c,d)
+
+    sae1_TWI_MTMR(a,b,c,d,e,f,g)
+    sae2_TWI_MTMR(a,b,c,d,e)
+
+    sae1_TWI_MR(a,b,c,d,e)
+    sae2_TWI_MR(a,b,c,d)
+
+    sae1_TWI_MTSR(a,b,c,d,e,f,g,h)
+    sae2_TWI_MTSR(a,b,c,d,e,f)
+
+    sae1_TWI_GCSR(a,b,c,d)
+    sae2_TWI_GCSR(a,b,c)
+
+    sae1_TWI_SR(a,b,c,d)
+    sae2_TWI_SR(a,b,c)
+
+    sae1_TWI_SRST(a,b,c,d,e)
+    sae2_TWI_SRST(a,b,c,d)
+  
+    sae_TWI_CANCEL(a)
+
+  RESULT
+
+    JOB
+      - EOK     the job succeeded.
+      - EINVAL  one or more info parameters was erroneous.
+      - EACCESS (master) the service was not available.
+      - ENODEV  (master) the host did not respond.
+      - EHOSTDOWN (master) the bus may be stuck.
+      - EBADE   (slave) the SR-phase slave was unable to receive all the data.
+      - EBADRQC (slave) a counterpart slave was not found.
+
+    CANCEL
+      - EOK     the job was successfully cancelled.
+      - EBUSY   the job is in a transaction and beyond reach at this time.
+      - ESRCH   the job was not found: it has already transpired.
+
+
+  Example usage.
+
+     For a notification:-
+         one-way MT, SR transaction.
+             VITZ and VITP
+
+     For a combined transaction:-
+         atomic MT|MR, SR|ST exchange.
+             TIMZ and UTC
+             DUMP and MEMZ
+
+     For a peer exchange:-
+         asynchronous MT|SR, SR|MT exchange.
+             CLI and FSD 
+             CLI and FSU 
+             EGOR and RWR
+`

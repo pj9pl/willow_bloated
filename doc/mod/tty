@@ -1,0 +1,30 @@
+
+  TTY
+
+  The TTY task provides a functional interface to a character buffer which
+  is then sent to an OSTREAM secretary at a selected destination.
+  It does not overwrite characters that are waiting to be sent.
+
+  The functional interface:-
+
+        PUBLIC void tty_putc(char ch);
+        PUBLIC void tty_flush(void);
+        PUBLIC void tty_puts(char *s);
+        PUBLIC void tty_puts_P(PGM_P str);
+        PUBLIC void tty_puthex(uchar_t ch);
+        PUBLIC void tty_printl(long n);
+        PUBLIC uchar_t tty_can_xmt (void);
+
+  The control interface:-
+
+        send_SET_IOCTL(TTY, SIOC_SELECT_OUTPUT, arg);
+              where arg is one of 0 = SER, 1 = GATEWAY, 2 = SPI_OLED.
+
+        send_SET_IOCTL(TTY, SIOC_OMODE, arg);
+              where arg is one of OMODE_COOKED, OMODE_RAW.
+
+
+  The tty functions are useful for debugging as they can be inserted into
+  a state machine without altering the course of events.  By the same token,
+  they should also be removable without altering the course of events.
+

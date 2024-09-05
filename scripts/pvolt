@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ pvolt
+     usage: trailer.sh|pvolt
+            grep ^eg, ../tmp/bali.20240122183237.sentf|tail|pvolt
+*/
+
+class ProcCsv {
+
+    function main($argv, $argc) {
+        $avg = 0;
+        while ($str = fgets(STDIN)) {
+            if (!strncmp($str, "egor:23,", strlen("egor:23,"))) {
+                if (list($s1, $s2) = explode(',', $str)) {
+                    $cvolt = hexdec($s2);
+                    if ($cvolt > 0xFFFFFF) {
+                        $channel = $cvolt >> 24;
+                        $cvolt &= 0xFFFFFF;
+                    }
+                    $cval = 2.5 / 16777216 * $cvolt; 
+                    if (abs($avg - $cval) < 0.000017) {
+                        $avg += $cval;
+                        $avg /= 2;
+                    } else {
+                        $avg = $cval;
+                    }
+                    printf("%2.6f %2.6f\n", $cval, $avg);
+                }
+            } else if (!strncmp($str, "eg,", strlen("eg,"))) {
+                if (list($s1, $s2, $s3, $s4) = explode(',', $str)) {
+                    $stamp = hexdec($s2);
+                    $setup = hexdec($s3);
+                    $cvolt = hexdec($s4);
+                    $channel = $cvolt >> 24;
+                    $cvolt &= 0xFFFFFF;
+                    $cval = 2.5 / 16777216 * $cvolt;
+                    print(strftime("%F %T",$stamp) . " ");
+                    printf("%d %d %2.6f\n", $setup, $channel, $cval);
+                }
+            }
+        }
+    }
+}
+
+$foo = new ProcCsv;
+$foo->main($argv, $argc);
+?>

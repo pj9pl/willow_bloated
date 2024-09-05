@@ -1,0 +1,58 @@
+Goat is an application for the ATmega328P microcontroller.
+Goat is a stand-alone parallel programmer with a zero insertion force socket.
+
+All the pins are required by the parallel interface, leaving none available
+to control the HC-05 nor the external reset. Consequently, the HC-05 LED
+should be flashing rapidly from when the power is applied, inviting a
+connection. Also, there is no 'q' command, so the reset button must be
+pressed prior to 'make flash'.
+
+To build, enter :-
+. ./defs.sh && make clean && make
+
+To install the firmware in the ATmega328P, first establish a connection with
+the Goat's HC-05. The linux /dev/rfcommX may not exist. The blueman-applet
+ 'Devices' dialog can be used to associate 'Goat' with a serial port.
+
+The current adapter named 'Goat', is a type ZS-040, ID 98:D3:A1:F5:CD:D0.
+
+To connect with  first of all enter :-
+
+. ./defs.sh
+
+This exports $logfileprefix, $tmpdir, $port and $PORT to the environment.
+
+Its HC-05 LED should be flashing at a rapid 50% duty cycle. Enter :-
+
+bt_tee_sender.sh.
+
+Ensure that bt_tee_receiver.sh is not executing.
+
+ - close BLSWITCH
+ - press RESET
+
+enter :-
+make flash
+
+If avrdude responds with 10 attempts in quick succession, check that $port
+is set in the environment, and corresponds with the output of rfcomm(1).
+
+Try:-
+   . ./defs.sh
+   make flash
+
+If avrdude responds with 10 attempts in slow succession, press the
+black RESET button.
+
+If avrdude completed successfully, the updated application will now be
+running, and bt_tee_receiver.sh can be executed in a separate terminal.
+Confirmation can be obtained by entering an 'e' in the bt_tee_sender.sh
+terminal and observe an ident response in the bt_tee_receiver.sh terminal.
+
+# Operation
+
+Commands should be listed in README.commands although inp.c is where they are
+defined.
+
+The linux avp(1) binary is designed to work with goat.
+

@@ -1,0 +1,19 @@
+
+  IOTA
+
+  The IOTA task is a driver for a No-Name 128x64 1.3" OLED screen containing
+  an SH1106. It is connected via the i2c interface described in SH1106.pdf on
+  page 21.
+
+  The actual device bears no manufacturer mark.
+  The SET_SEGMENT_REMAP command has no effect on the current display.
+  Subsequent data is written in the new orientation.
+
+  It is hosted on lima.
+
+  It assumes the alias of OLED.
+
+  This display RAM can be read and is used as a 2x512 data buffer between EGOR
+  on pisa and HILDA on oslo. The 132 bytes in a page leave 4 bytes available
+  for other purposes. This could include left and right calipers, or ownership
+  amongst clients. There are two invisible bytes at either end.

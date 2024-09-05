@@ -1,0 +1,8 @@
+
+  DMP
+
+  The DMP task provides a local memory dump service.
+
+  It accepts a job specifying the starting address and the number of bytes.
+  These bytes are then printed in hexadecimal lines and sent as jobs to the
+  SER task.

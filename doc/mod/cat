@@ -1,0 +1,18 @@
+
+  CAT
+
+  The CAT task is a cli utility that transfers a file from the SDcard on oslo
+  to the serial output on bali.
+
+  Usage: cat [offset] path
+
+  The optional offset argument specifies the starting position.
+
+  Upon completion a single line report is printed that specifies the exit
+  status and the final file position. This file position can be specified
+  as the offset in subsequent cat operations.
+
+  A single buffer is used to read from the file server and write to the USART.
+  This achieves half the potential throughput in order to provide a window of
+  opportunity to other TWI operations, in keeping with the principles of
+  cooperative coexistance.  

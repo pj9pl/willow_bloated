@@ -1,0 +1,18 @@
+
+  BATZ
+
+  The BATZ task is a periodic process director that measures the battery
+  voltage and sends the result to a destination in a BATTERY_NOTIFY.
+
+   This accepts START, STOP and SET_IOCTL messages:-
+       SIOC_SET_SAMPLING_RATE:
+          0 = 5 minutes
+          1 = 1 minute
+          2 = 2 seconds
+
+       SIOC_SELECT_OUTPUT:
+          0 = OFF
+          1 = LCD (sumo)
+          2 = OLED (peru)
+          3 = OLED (lima)
+          7 = GCALL (any/none)

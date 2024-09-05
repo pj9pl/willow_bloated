@@ -1,0 +1,19 @@
+Iowa is an application for the ATmega328P mcu.
+
+Iowa hosts the file system utilities and an auxiliary ICSP task with which
+to reprogram bali. It has an 11.06 MHz ceramic resonator and a HC-05 adaptor.
+
+To build and install the application :-
+
+  $ make
+  $ cd ../bali
+  $ avril iowa
+
+To build and install the application and bootloader :-
+
+  connect the ICSP cable between bali and iowa
+
+  $ make image
+  $ cd ../bali
+  $ (. ./defs.sh && cd ../iowa && make avp)
+

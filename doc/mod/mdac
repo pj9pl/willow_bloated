@@ -1,0 +1,39 @@
+
+  MDAC
+
+  The MDAC task manages an MCP4728 DAC. It accepts mdac jobs to read or
+  write one of four channels. Each channel contains a 12-bit value, a
+  1-bit reference, a 2-bit powermode and a 1-bit gain. The write can
+  exclude the EEPROM and inhibit the output register update.
+
+  The RDY/BSY output is inverted to a more convenient low READY term
+  which can be level-detected by INT0, instead of a high RDY term that
+  can only be transition-detected.
+
+  Each channel can be written individually, but they are all read together
+  as a single 24-byte MT-MR transaction. There are 6 bytes per channel with
+  the first 3 being the input registers and the second three being the EEPROM
+  contents. The values being returned to the caller are the EEPROM contents.
+  
+  The default I2C address is 0xC0. This can be changed [MCP4728 p.42] to
+  0xC2,0xC4,0xC6,0xC8,0xCA,0xCC,0xCE. This requires bit-banging to synchronize
+  the /LDAC negative transition during the negative pulse of the 8th clock
+  pulse of the 2nd byte, as the TWI interface doesn't inform the software
+  until after the ACK period. It would be messy to incorporate this mechanism
+  into the TWI driver anyway.
+
+  n.b.
+  possible typo: the datasheet [MCP4728 p.45] has bit 3 (0x08) of each
+  '5th byte' as 0, whereas it is read back as 1.
+
+  The MDAC can be written using the '<ch,ee,val,inh,ref,pm,ga> M' command
+  and read using the '<ch,ee> m' command, where:-
+
+      ch  = [0..3] = [A, B, C, D]
+      ee  = [0..1] = [OUTPUT, EEPROM]
+      val = [0..4095] = VALUE
+      inh = [0..1] = [UPDATE, INHIBIT]
+      ref = [0..1] = [VDD_REFERENCE, INTERNAL_REFERENCE]
+      pm  = [0..3] = [NORMAL, OFF_1K, OFF_100K, OFF_500K]
+      ga  = [0..1] = [ZERO_DB, SIX_DB]
+ 

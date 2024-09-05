@@ -1,0 +1,13 @@
+
+  ISTREAM
+
+  The ISTREAM task is a network secretary that provides remote access to an
+  INP task.
+
+  When the INP task has read each character and received the EWOULDBLOCK
+  return value, the ISTREAM task sends a reply to the caller and resumes
+  its quiescent condition in waiting for the next request to arrive.
+
+  It is implemented on each internal host as an alternative to the SER task
+  which has no USART0 connection.
+

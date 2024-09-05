@@ -1,0 +1,28 @@
+
+  GCC
+
+  The Willow system itself uses compound literals, designated initializers,
+  long longs, flexible array members, the __flash qualifier, binary constants
+  and the ((unused)) and ((packed)) __attribute__ statements.
+
+  The Optiboot bootloader uses the ((naked)) and ((section)) __attribute__
+  statements.
+
+  These are supported by avr-gcc 7.3.0 which is provided with arduino-1.8.10.
+  The raspberry pi installs avr-gcc 5.4.0 which is provided with arduino-1.8.13
+
+  Designated initializers are required to ensure that the proctab[] members are
+  assigned in ProcNumber order. Maintaining this correspondance manually would
+  be a liability.
+
+  Non-trivial designated initializers not supported by avr-g++ (GCC) 7.3.0.
+
+  avr-g++ doesn't recognise the __flash qualifier, as in:-
+
+      static const MsgProc __flash proctab[] = {
+
+  but does accept the PROGMEM __attribute__:-
+
+      static const MsgProc proctab[] PROGMEM = {
+
+  Both produce the same binary code.

@@ -1,0 +1,14 @@
+
+  HVPP
+
+  The HVPP task is the High Voltage Parallel Programmer. It is hosted on York.
+
+  The hvpp_info contains a lineno field. This indicates the offending line
+  in the event of an EINVAL or EBADF client reply. 
+  
+  The avp(1) program is used to feed an aligned Intel hex file to HVPP.
+
+  For example, from within the goat source directory, type:-
+
+  $ avp -l 0xE2 -h 0xDA ../peru/image.hex
+

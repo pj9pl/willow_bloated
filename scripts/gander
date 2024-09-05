@@ -1,0 +1,79 @@
+#!/usr/bin/env php
+<?php
+
+/* gander - feed a hex file one line at a time,
+            waiting for a '.' before sending the next.
+
+   usage: gander -f ../twiboot/twiboot.hex [-p $port] 
+          gander -f ../pisa/pisa.hex [-p $port] 
+*/
+
+class Gander {
+
+    function main($argv, $argc) {
+        $file;
+        $wait_for_dotprompt = 0;
+        $portin = 0;
+        $portout = 0;
+        $filename;
+        $arg;
+        $showdots = FALSE;
+        $line_number = 0;
+
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-w") {
+                    $wait_for_dotprompt = 1;
+                }
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portin = fopen($argv[$i + 1], "r");
+                        $portout = fopen($argv[$i + 1], "w");
+                    }
+                }
+                if ($argv[$i] == "-f") {
+                    if ($i < $argc) {
+                        $filename = $argv[$i + 1];
+                        $file = fopen($filename, "r");
+                    }
+                }
+            }
+        }
+
+        if ($portin == 0 && $portout == 0) {
+            $arg = getenv("port");
+            if ($arg) {
+                $portin = fopen($arg, "r");
+                $portout = fopen($arg, "w");
+            }
+        }
+        if ($file && $portin && $portout) { 
+            if ($wait_for_dotprompt) {
+                $response = fgetc($portin);
+                if (strcmp($response, ".") != 0) {
+                    exit(1);
+                }
+            }
+            while ($line = fgets($file)) {
+                fputs($portout, $line);
+                $line_number++;
+                $response = fgetc($portin);
+                if ($showdots)
+                    print($response);
+                else
+                    printf("\r %d ", $line_number);
+                if (strcmp($response, "."))
+                    break;
+            }
+            $response = fgets($portin);
+            fclose($file);
+            fclose($portin);
+            fclose($portout);
+        }
+        print("\n");
+    }
+}
+
+$foo = new Gander;
+$foo->main($argv, $argc);
+?>

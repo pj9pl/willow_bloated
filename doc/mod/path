@@ -1,0 +1,6 @@
+
+  PATH
+
+  The PATH task is a pathname traversal task.
+
+  Typing 'path /home/pjw' prints the inode number of the basename.

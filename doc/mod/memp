@@ -1,0 +1,12 @@
+
+  MEMP
+
+  The MEMP task is a network secretary provides remote write access to
+  the host that it runs on.
+
+  It receives a MEMP_REQUEST containing a host address, a source address,
+  a destination address and a count value. It sends the source address and
+  the count back to the host address in a MEMZ_REQUEST to read remote data
+  into its local SRAM at the destination address. It then sends a MEMP_REPLY
+  back to the caller with the number of bytes successfully transferred.
+

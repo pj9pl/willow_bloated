@@ -1,0 +1,27 @@
+
+  KEYCONF
+
+  The KEYCONF task reads a file and parses the contents. This file should
+  contain only button associations and comments.
+
+  A comment should have an octothorpe (#) character in the first column,
+  and extends to the end of line.
+
+  A button association is a comma separated value record with a 'B' in the
+  as the first value, a key number as the second value, and a path as the
+  third value. The path should correspond to an alba configuration file.
+
+  For example:-
+
+  # etc/key/basic
+  B,1,/alba/0-noise
+  B,2,/alba/0-peru
+  B,3,/alba/patch2
+  B,4,/alba/patch3
+  B,5,/alba/patch4
+  B,6,/alba/patch5
+  B,7,/alba/patch6
+  B,8,/alba/patch7
+
+  The path is resolved to an inode number then the button number and the
+  inode number are sent to KEYEXEC.

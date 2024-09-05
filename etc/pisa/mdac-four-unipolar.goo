@@ -1,0 +1,74 @@
+# mdac-four-unipolar.goo
+#
+# Script to configure Pisa for four unipolar
+# inputs on A12,A13,A14 and A15.
+#
+#-----------------------------------------
+# Begin with a reset.
+:yFFFFFFFFFFFFFFFF;
+#
+#
+#
+#
+#----------------------------------------
+# read STATUS_REGISTER to clear the POR_FLAG
+:y4000;
+#
+#
+#----------------------------------------
+# write ADC_CONTROL_REGISTER [p.80] with:-
+#   REF_EN     = (0x01 << 8)            = 0x0100,
+#   MID_POWER  = (0x01 << 6)            = 0x0040,
+#   CONTINUOUS_CONVERSION = (0x00 << 2) = 0x0000,
+#   INTERNAL_CLK = (0x00 << 0)          = 0x0000.
+:y010140;
+#
+#---------------------------------------
+# write CHANNEL_0 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0C << 5)  = 0x0180 (decimal 12) pin Ain12,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+:y098191;
+#
+#---------------------------------------
+# write CHANNEL_1 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0D << 5)  = 0x01A0 (decimal 13) pin Ain13,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+:y0A81B1;
+#
+#---------------------------------------
+# write CHANNEL_2 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0E << 5)  = 0x01C0 (decimal 14) pin Ain14,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+:y0B81D1;
+#
+#---------------------------------------
+# write CHANNEL_3 [p.88] with:-
+#   ENABLE = (0x01 << 15) = 0x8000,
+#   SETUP  = (0x00 << 12) = 0x0000,
+#   AINP   = (0x0F << 5)  = 0x01E0 (decimal 15) pin Ain15,
+#   AINM   = (0x11 << 0)  = 0x0011 (decimal 17) Avss.
+:y0C81F1;
+#
+#--------------------------------------
+# write CONFIG_0 [p.90] with:-
+#   REF_BUFP = (0x01 << 8)  = 0x0100
+#   REF_BUFM = (0x01 << 7)  = 0x0080
+#   AIN_BUFP = (0x01 << 6)  = 0x0040
+#   AIN_BUFM = (0x01 << 5)  = 0x0020
+#   REFIN1   = (0x00 << 3)  = 0x0000
+#   PGA Gain = 8            = 0x0003
+:y1901E3;
+#
+#-------------------------------------
+# write FILTER_0 [p.91] with:-
+#   FILTER = (0x04 << 21) = 0x800000 (sync4 + averaging block)
+#   FS = (0x780 << 0) = 0x000780 (decimal 1920)
+:y21800780;
+#
+

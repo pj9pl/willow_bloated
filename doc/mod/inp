@@ -1,0 +1,29 @@
+
+  INP
+
+  The INP task is a consumer that interprets a stream of characters
+  into commands that the host is capable of executing. The commands are
+  of the {number letter} form. Multiple numbers are separated by commas.
+
+  Normally, each host implements their own inp.c as required.
+  The generic sys/inp.c contains just the bare essentials.
+  Each recognised command is described in host/README.commands.
+
+  The character input is delivered by way of a NOT_EMPTY message sent by a
+  producer when the bounded buffer has had a first character inserted into a
+  previously empty buffer. The INP task then greedily consumes each available
+  character until the buffer is EMPTY. The NOT_EMPTY notification is only sent
+  when the bounded buffer status changes from EMPTY to NOT_EMPTY.
+
+  The INP task may accept a NOT_EMPTY message from any producer as the message
+  carries a function pointer with which to extract a character from the buffer.
+
+  If a NOT_EMPTY message is received whilst another buffer is being consumed,
+  the current buffer is drained without further interpretation. The data is
+  discarded, and the new buffer is consumed in its stead. A queue would be
+  more appropriate. The important thing is that the old buffer is drained to
+  the point where fetching a byte returns EWOULDBLOCK and the producer task
+  is able to continue onto its next state. 
+
+  What we don't want is for the new buffer to overwrite the old buffer,
+  leaving the old producer waiting for a message that will never arrive.

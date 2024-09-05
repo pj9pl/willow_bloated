@@ -1,0 +1,8 @@
+#!/bin/sh
+# proc-bar-date - process all barometer output since 10:30:57 May 25th 2022 BST
+#            be,xxxxxxxx,xx,xxxxxxxx
+OUTFILE=bar.out
+grep -E ^be,[[:xdigit:]]{8},[[:xdigit:]]{2},[[:xdigit:]]{8}$ \
+             ../tmp/bali*sentf|cut -d':' -f2-|cut -d',' -f2-| \
+                grep -v 'C3810006'|cat ../legacy/BMP180-feb-may-2022 - | \
+                sort|uniq|barometer-8col>$OUTFILE

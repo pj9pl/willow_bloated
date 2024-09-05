@@ -1,0 +1,5 @@
+
+  HC05
+
+  There is no such HC05 server as such, the bc4.c and bcy.c both provide
+  an HC05 interface. The OLED task is similar.

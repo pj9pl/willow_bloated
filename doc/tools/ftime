@@ -1,0 +1,29 @@
+
+  FTIME
+
+  Ftime is a linux program to compare the RV-3028-C7 RTC with the
+  linux ntp time.
+
+  It is executed in the auxiliary terminal and reads the Bluetooth
+  serial input.
+
+  The bt_tee_receiver.sh script must be exited to allow ftime to read
+  the Bluetooth serial input.
+
+  In the auxiliary terminal, type:-
+
+      ftime 2>&1 |tee -a ftime.out
+
+  In the send terminal, type:-
+
+      inp fido 1z
+      inp fido r
+      inp fido k
+      inp fido 1u
+      inp fido 2u
+      inp fido 0u
+
+  There is a discrepancy between per-minute and per-second intervals
+  of about 85 milliseconds which might be explained by the HC-05
+  having to be powered-up each minute, whereas it's still awake after
+  only one second.

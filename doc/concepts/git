@@ -1,0 +1,47 @@
+
+  GIT
+
+  The git describe function has been used in the description. The output is
+  dependent upon the vicinity of the most recent tag.
+
+  Development occurs on the unstable branch. A periodical merge with the
+  master branch can be performed using:-
+
+      git checkout master
+      git merge unstable
+      git checkout unstable
+
+  --
+
+  To create a remote bare repository named Code/bare-willow.git on raspberrypi:-
+
+    git bundle create camel_unstable --all
+    rsync -av camel_unstable raspberrypi:Code/
+    ssh raspberrypi
+    cd Code
+    git clone --bare camel_unstable bare-willow.git
+
+  the working repo can then be backed-up to the bare repo using:-
+
+    git push --all raspberrypi:Code/bare-willow
+ 
+  --
+
+  Handy commands.
+
+    -  git commit --amend
+
+    -  git reset         - reset current additions
+
+    -  git undo          - remove the previous commit, leaving tree undisturbed
+
+    -  git -D branch-name   - force the removal of a branch
+
+    -  git tag -a -m "sync" balsa
+       - checkout the unstable branch first -
+
+    -  git push raspberrypi:Code/willow doesn't work like I thought it would.
+        (see above)
+
+  --
+    

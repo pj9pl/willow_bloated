@@ -1,0 +1,5 @@
+
+  FRITZ
+
+  The FRITZ task is an ALBA secretary that initializes ALBA following a system
+  reset. It receives an INIT message from SYSINIT.

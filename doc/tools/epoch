@@ -1,0 +1,10 @@
+
+  EPOCH
+
+  This PHP script sets the RV-3028-C7 UNIXTIME register with the
+  current UNIX timestamp of the linux host.
+
+  The output is of the form:-
+
+      inp fido 1723487595N
+

@@ -1,0 +1,107 @@
+#!/usr/bin/env php
+<?php
+
+/* test-mk - test the mk CLI command
+ * usage: test-mk [-p $port] 
+*/
+
+class TestMk {
+
+    function main($argv, $argc) {
+        $portin = 0;
+        $portout = 0;
+        $n = 0;
+
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portin = fopen($argv[$i + 1], "r");
+                        $portout = fopen($argv[$i + 1], "w");
+                    }
+                }
+            }
+        }
+
+        if ($portin == 0 && $portout == 0) {
+            $arg = getenv("port");
+            if ($arg) {
+                $portin = fopen($arg, "r");
+                $portout = fopen($arg, "w");
+            }
+        }
+
+        $fruits = array (
+                          array ("cd /",                     "ok" ),
+
+                          array ("mkdir junk",               "ok" ),
+                          array ("mkdir junk/bar",           "ok" ),
+                                 /* test ENOTEMPTY */
+                          array ("rmdir junk",               "(39)" ),
+                          array ("rmdir junk/bar",           "ok"  ),
+                                 /* test ENAMETOOLONG */
+                          array ("mk junk/rumpelstiltskin",  "(36)" ),
+                          array ("mk junk/123456789abcde",   "ok" ),
+                          array ("rm junk/123456789abcde",   "ok" ),
+                          array ("mk junk/name!",            "(22)" ),
+                          array ("mk junk/name\"",           "(22)" ),
+                          array ("mk junk/name£",            "ok" ),
+                          array ("rm junk/name",             "ok" ),
+                          array ("mk junk/name$",            "(22)" ),
+                          array ("mk junk/name%",            "(22)" ),
+                          array ("mk junk/name^",            "(22)" ),
+                          array ("mk junk/name&",            "(22)" ),
+                          array ("mk junk/name*",            "(22)" ),
+                          array ("mk junk/name(",            "(22)" ),
+                          array ("mk junk/name)",            "(22)" ),
+                          array ("mk junk/name_",            "ok" ),
+                          array ("rm junk/name_",            "ok" ),
+                          array ("mk junk/name-",            "ok" ),
+                          array ("rm junk/name-",            "ok" ),
+                          array ("mk junk/name+",            "(22)" ),
+                          array ("mk junk/name=",            "(22)" ),
+                          array ("mk junk/name{",            "(22)" ),
+                          array ("mk junk/name}",            "(22)" ),
+                          array ("mk junk/name[",            "(22)" ),
+                          array ("mk junk/name]",            "(22)" ),
+                          array ("mk junk/name'",            "(22)" ),
+                          array ("mk junk/name~",            "(22)" ),
+                          array ("mk junk/name#",            "(22)" ),
+                          array ("mk junk/name\\",           "(22)" ),
+                          array ("mk junk/name|",            "(22)" ),
+                          array ("mk junk/name,",            "(22)" ),
+                          array ("mk junk/name<",            "(22)" ),
+                          array ("mk junk/name.",            "ok" ),
+                          array ("rm junk/name.",            "ok" ),
+                          array ("mk junk/name?",            "(22)" ),
+                          array ("rmdir junk",               "ok" ),
+                        );
+
+        if ($portin && $portout) { 
+
+            foreach ($fruits as $fruit) {
+                $n++;
+                fprintf(STDOUT, "%2d %-40s ", $n, $fruit[0]);
+                fflush(STDOUT);
+                fputs($portout, $fruit[0] . "\n");
+                $response = fgets($portin);
+                if (strcmp($response, $fruit[1] . "\n") != 0) {
+                    fputs(STDERR, "expected '" . $fruit[1] . "', got " .
+                                                                  $response);
+                    exit(1);
+                } else {
+                    fprintf(STDOUT, "%-15s passed\n", $fruit[1]);
+                }
+            }
+
+            print("all tests succeeded\n");
+
+            fclose($portin);
+            fclose($portout);
+        }
+    }
+}
+
+$foo = new TestMk;
+$foo->main($argv, $argc);
+?>

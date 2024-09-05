@@ -1,0 +1,28 @@
+
+  EEX
+
+  The EEX task manages the transfer of data between the SRAM and the EEPROM.
+  It provides a JOB interface to accomodate four parameters. 
+
+  If any location is beyond the available space, EINVAL is returned.
+ 
+  Example from pisa/inp.c :-
+
+  To copy from the SRAM to the EEPROM:-
+    ...
+    inp.u.eex.sptr = (uchar_t *)&inp.ext_cal;
+    inp.u.eex.eptr = 0;
+    inp.u.eex.cnt = sizeof(inp.ext_cal);
+    inp.u.eex.mode = EEX_WRITE;
+    send_JOB(EEX, &inp.u.eex);
+    ...
+
+  To copy from the EEPROM to the SRAM:-
+    ...
+    inp.u.eex.sptr = (uchar_t *)&inp.ext_cal;
+    inp.u.eex.eptr = 0;
+    inp.u.eex.cnt = sizeof(inp.ext_cal);
+    inp.u.eex.mode = EEX_READ;
+    send_JOB(EEX, &inp.u.eex);
+    ...
+

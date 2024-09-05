@@ -1,0 +1,57 @@
+
+  AVRIL
+
+  avril is used to reprogram the application section of an internal host that
+  has twiboot installed in the bootloader section. It communicates with bali
+  from within the bali working directory.
+
+  Export $port to the environment using:-
+     . ./defs.sh
+
+  Exit the bt_tee_receiver.sh script in the receiving terminal so that avril
+  can read the bluetooth input.
+
+  Run the program:-
+     avril hostname [hostname ...]
+
+  avril loads an application image onto an internal host using ISP hosted on
+  bali. The hexfile must contain a series of IHEX_DATA_RECORDs with an
+  IHEX_EXTENDED_LINEAR_ADDRESS_RECORD preceeding any eeprom data, terminated
+  by an IHEX_END_OF_FILE_RECORD.
+
+  It is operated from bali's source directory where the environment specifies
+  bali's HC-05 adaptor and the hexfile path begins with '../'.
+
+  There is always the potential to write the wrong hexfile to the wrong host.
+  It is therefore standard procedure to name the directory and the hexfile
+  to by the hostname, so that a hexfile can be easily identified.
+  The current format is 'hostname/hostname.hex'
+
+  The bluetooth port and the baudrate can be set in the environment as:-
+     $port and $baud
+
+  Errors
+
+    - if it hangs and 'closed' or 'open' appears on the receiving terminal,
+      the bt_tee_receiver.sh is reading the response instead of avril.
+      Quit bt_tee_receiver.sh and avril then try again.
+
+    - if you get expected 'TWIBOOT', got 'newline'
+      then when you reconnect the bt_tee_receiver.sh you see:- cli: error 11
+      first check that the bootloader switch is closed.  
+
+    - $port must be set in the environment, to something like /dev/rfcomm0.
+
+    - A frequent cause of failure is the target receiving a message from
+      another host whilst being reprogrammed.
+
+    - If the progression halts during the programming operation, gander(1)
+      may be used to perform the operation, for example with pisa:
+         - reset the target.
+         - enter 'isp pisa' in the sending terminal, and observe:
+                          TWIBOOT v3.2c
+                          1E950F807C000400
+           in the receiving terminal.
+         - quit the bt_tee_receiver.sh script in the receiving terminal.
+         - execute 'gander -f ../pisa/pisa.hex'
+

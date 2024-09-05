@@ -1,0 +1,19 @@
+  This directory contains a modified version of the twiboot bootloader
+  by Olaf Rempel (razzor@kopf-tisch.de) derived from:-
+    https://github.com/orempel/twiboot
+       git description: v3.0-5-g559a403
+       date: 2021-02-20 20:56:26
+
+
+  To build twiboot.hex, type:-
+    make I2C_ADDRESS=i2c_address MCU=device F_CPU=hertz \
+                                           BOOTLOADER_START=mem_address
+
+  substituting i2c_address, device, hertz and mem_address with actual values
+  for example:-
+    make I2C_ADDRESS=FIDO_I2C_ADDRESS MCU=atmega328p F_CPU=8000000 \
+                                                BOOTLOADER_START=0x7C00
+
+  The usual method is to execute 'make image' from within one of the
+  application directories, which provides the appropriate arguments
+  and incorporates the hex file into the application image.

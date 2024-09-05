@@ -1,0 +1,6 @@
+
+  SER
+
+  The SER task is the USART0 device driver. It is essentially two conjoined
+  drivers as it provides independent input and output interfaces.
+

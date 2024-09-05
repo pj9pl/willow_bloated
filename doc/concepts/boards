@@ -1,0 +1,61 @@
+
+  BOARDS
+
+    Stripboard is easy to use. Edges should be smooth. Clean tracks
+    are essential. Isopropyl alcohol, cotton buds and a fiberglass
+    pencil (RS: 514-868) should be used.
+
+    Single strand 0.6mm hookup wire (Cricklewood: WP16) maintains
+    its shape and provides strain relief. Connections are insulated
+    using 1mm silicone sleeving (RS: 399-401).
+
+    A ring topology may reduce the voltage drop at the furthest point
+    from the power supply. Whilst a ring has no ends to cause reflections
+    without correct termination impedance, there may be ringing at some
+    resonant frequency.
+
+    Each board has two flying leads terminated with a 9 pin D-Type.
+    Male for the input, female for the output.
+
+        1 black    0v
+        2
+        3 white    RTC
+        4
+        5 orange   +3.3v
+        6
+        7 grey     SCL
+        8 pink     SDA
+        9 red      +5v
+        
+    A board with a HC-05 adaptor has red and green buttons and a switch.
+    A board without a HC-05 has one black button and a switch.
+    The red or black button performs an external reset.
+    The green button energises a deactivated HC-05 into Pairing Mode
+    for 30 seconds.
+
+    The 5v rail feeds the HC-05 adaptors and the LCD backlight.
+
+    The HC-05 current consumption is ~45mA during Pairing Mode.
+    The consumption increases with a higher baud rate, with 115200
+    consuming ~36mA.
+
+    This burden justifies its own 3.3v regulator fed from the 5v rail.
+
+    The switch is a two position sliding type. While the switch is
+    closed an external reset causes the bootloader to be entered.
+
+    An external host uses optiboot whereas an internal host uses twiboot.
+
+    The system clock source is normally configured to use the internal
+    RC oscillator at 8MHZ.
+
+    The factory default setting of CKDIV8 needs to be unprogrammed by
+    changing bit 7 of the Low Fuse Byte from low to high as in 0x62 to
+    0xE2 [p.292].
+
+    A 3-pin 11.06 MHz ceramic resonator (RS: 728-8474) is fitted to
+    some boards in order to achieve a baudrate of 115200. This requires
+    the Low Fuse Byte to be programmed to 0xCF [p.39,292] and F_CPU
+    defined as 11059200 Hz.
+
+    The extrapolated maximum clock frequency at 3.3v being ~13 MHz [p.312].

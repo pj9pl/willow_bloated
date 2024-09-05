@@ -1,0 +1,5 @@
+
+  RM
+
+  The RM task is a utility to remove items from the file system. It is accessed
+  through the CLI as either 'rm' for regular files or 'rmdir' for directories.

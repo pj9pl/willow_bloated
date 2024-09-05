@@ -1,0 +1,168 @@
+#!/usr/bin/env php
+<?php
+
+/* putfile - feed a text file one line at a time,
+             waiting for a '.' before sending the next.
+
+   usage: putfile -i infile -o outfile [-p port]
+*/
+
+class Putfile {
+
+    function main($argv, $argc) {
+        $allok = TRUE;
+        $file;
+        $portin = 0;
+        $portout = 0;
+        $filename;
+        $outfilename;
+        $basename;
+        $showdots = FALSE;
+        $arg;
+        $lineno = 0;
+        $zones = 0;
+        $outdirname = NULL;
+        $fzones = 0;
+        if ($argc > 1) {
+            for ($i = 1; $i < $argc; $i++) {
+                if ($argv[$i] == "-p") {
+                    if ($i < $argc) {
+                        $portin = fopen($argv[$i + 1], "r");
+                        $portout = fopen($argv[$i + 1], "w");
+                    }
+                }
+                if ($argv[$i] == "-i") {
+                    if ($i < $argc) {
+                        $filename = $argv[$i + 1];
+                        $file = fopen($filename, "r");
+                        $fzones = (filesize($filename) >> 13) +1;
+                    }
+                }
+                if ($argv[$i] == "-o") {
+                    if ($i < $argc) {
+                        $outfilename = $argv[$i + 1];
+                    }
+                }
+            }
+        }
+
+        if ($portin == 0 && $portout == 0) {
+            $arg = getenv("port");
+            if ($arg) {
+                $portin = fopen($arg, "r");
+                $portout = fopen($arg, "w");
+            }
+        }
+        if ($file && $portin && $portout) { 
+            fputs($portout, "e\n");
+            $response = fgets($portin);
+            if (strncmp($response, "# ", strlen("# ")) == 0) {
+                /* talking to the INP */
+                fputs($portout, "a\n");
+                $response = fgets($portin);
+                if (strncmp($response, "in cli", strlen("in cli")) != 0) {
+                    $allok = FALSE;
+                    printf("failed to enter the CLI\n");
+                }
+            } else if (strncmp($response, "e : bad command",
+                                        strlen("e : bad command")) != 0) {
+                /* not talking to the CLI */
+                $allok = FALSE;
+                printf("not talking to the CLI\n");
+            }
+            if ($allok) {
+                /* check that the destination file exists */
+                fprintf($portout, "ls -l %s\n", $outfilename);
+                $response = fgets($portin);
+                if (strncmp($response, "(2)", strlen("(2)")) == 0) {
+                    /* file does not exist */
+                    fprintf($portout, "mk %d %s\n", $fzones, $outfilename);
+                    $response = fgets($portin);
+                    if (strncmp($response, "ok", strlen("ok")) != 0) {
+                        $allok = FALSE;
+                        printf("failed to create the outfilename\n");
+                    }
+                } else if (strncmp($response, "(20)", strlen("(20)")) == 0) {
+                    /* path does not exist */
+                    $outdirname = strrchr($outfilename, '/');
+                    fprintf($portout, "mkdir %s\n", $outdirname);
+                    $response = fgets($portin);
+                    if (strncmp($response, "ok", strlen("ok")) != 0) {
+                        $allok = FALSE;
+                        printf("failed to create the outfilename\n");
+                    } else {
+                        fprintf($portout, "mk %d %s\n", $fzones, $outfilename);
+                        $response = fgets($portin);
+                        if (strncmp($response, "ok", strlen("ok")) != 0) {
+                            $allok = FALSE;
+                            printf("failed to create the outfilename\n");
+                        }
+                    }
+                } else if (sscanf($response,
+                              "-rw- %*d %d %*d %*s %*d %*d:%*d %*s",
+                                 $zones) != 8) {
+                    $allok = FALSE;
+                    printf("failed to list the outfilename\n");
+                }
+                if ($allok && $zones > 0 && $zones < $fzones) {
+                    /* Existing file is too small.
+                     * Delete it and create a bigger one.
+                     */
+                    fprintf($portout, "rm %s\n", $outfilename);
+                    $response = fgets($portin);
+                    if (strncmp($response, "ok", strlen("ok")) != 0) {
+                        $allok = FALSE;
+                        printf("failed to create the outfilename\n");
+                    } else {
+                        fprintf($portout, "mk %d %s\n", $fzones, $outfilename);
+                        $response = fgets($portin);
+                        if (strncmp($response, "ok", strlen("ok")) != 0) {
+                            $allok = FALSE;
+                            printf("failed to create the outfilename\n");
+                        }
+                    }
+                }
+                if ($allok) {
+                    /* start the put process */
+                    fprintf($portout, "put -t %s EOF\n", $outfilename);
+                    $response = fgetc($portin);
+                    if (strcmp($response, ".") == 0) {
+                        while ($line = fgets($file)) {
+                            fputs($portout, $line);
+                            $lineno++;
+                            $response = fgetc($portin);
+                            if ($showdots)
+                                print($response);
+                            else
+                                printf("\r %d ", $lineno);
+                            if (strcmp($response, ".")) {
+                                $allok = FALSE;
+                                printf("bad response at line %d\n", $lineno);
+                                break;
+                            }
+                        }
+                        if ($allok) {
+                            fputs($portout, "EOF\n");
+                        }
+                    }
+                    $response = fgets($portin);
+                    print($response);
+                } else {
+                    printf("not ok\n");
+                }
+            }
+            fclose($file);
+            fclose($portin);
+            fclose($portout);
+        } else {
+            if ($file == 0)
+                printf("failed to open file %s\n", $filename);
+            if ($portout == 0)
+                printf("failed to open port %s\n", $portname);
+        }
+    }
+}
+
+$foo = new Putfile;
+$foo->main($argv, $argc);
+?>

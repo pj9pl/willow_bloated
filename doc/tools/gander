@@ -1,0 +1,12 @@
+
+  GANDER
+
+  Gander is a php script to feed a .hex file to an amenable mpu, e.g. bali.
+  The cli on bali needs to be prepared for the gander input by issuing either
+     icsp
+  or
+     isp <host>
+  prior to gander being executed.
+
+  Example:-
+    gander -f ../peru/peru.hex -p $port

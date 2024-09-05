@@ -1,0 +1,13 @@
+# goat/README.commands
+
+c : print cycle count
+
+1d : dump registers
+2d : dump sram
+3d : dump registers and sram 
+
+e : print build ident
+
+1L : run the High Voltage Parallel Programmer 
+
+999W : test the watchdog reset with an endless loop

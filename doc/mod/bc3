@@ -1,0 +1,19 @@
+
+  BC3
+
+  The BC3 task manages a ZS_040 BC352 HC-05 Bluetooth adapter.
+  It provides a HC05 client interface. 
+
+  There are two of these items:-
+     98:D3:A1:F5:CD:D0
+     98:D3:71:F5:EF:91  BC352 239AU K005BH
+     
+  The BC352 doesn't have a VREG_EN input, so the HC05_ENABLE signal
+  emanating from PORTD5 (pin #11) controls an external +5v VDD switch:-
+     low = off
+     high = on
+
+  The HC05_KEY signal emanating from PORTD2 (pin #4) is fed into the pin
+  marked EN:-
+     low | undriven = transparent UART
+     high = AT_MODE

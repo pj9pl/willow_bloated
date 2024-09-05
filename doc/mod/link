@@ -1,0 +1,7 @@
+
+  LINK
+
+  The LINK task accepts a filename and an inode number and creates an item
+  in the current working directory, which is specified by an inode number.
+
+  It is accessed through an FSD_REQUEST OP_LINK message.  

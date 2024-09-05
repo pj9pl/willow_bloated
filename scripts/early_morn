@@ -1,0 +1,7 @@
+#!/bin/sh
+# scripts/early_morn - automated backup scheduler. K&P p.129
+#
+# stuff to do
+make daily
+# reschedule for tomorrow
+echo scripts/early_morn |at 5am

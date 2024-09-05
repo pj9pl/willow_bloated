@@ -1,0 +1,37 @@
+
+  MV
+
+  The MV task is a file system utility to move one or more directory items.
+
+  syntax: mv src [...] dst
+
+  - If dst exists and is a directory, a link is created between src and
+    dst/src, then src is unlinked.
+    There can be more than one src items.
+
+  - If dst exists and is a regular file, dst is unlinked and a link is created
+    between src and dst, with src being renamed as dst. Then src is unlinked.
+    There can only be a single src.
+    An attempt to move more than a single item to a regular file will generate
+    an EPERM result value.
+
+  - If dst does not exist, a link is created between src and dst, with src
+    being renamed as dst. Then src is unlinked.
+    There can only be a single src.
+    The dst name must not be longer than NAME_SIZE.
+    An attempt to move more than a single item to a non-existant item will
+    generate an EPERM result value.
+
+  - If src is a directory, src must not be in the path of dst as this would
+    create a loop which would render dst inaccessible.
+    An attempt to move a src to a subdirectory of src generates an EPERM
+    result value.
+
+  - If src is a regular file and dst is the same directory that contains src,
+    nothing is done.
+    An attempt to do this will generate an EPERM result value.
+
+  - The root directory cannot be moved, as this would inevitably be to a
+    subdirectory of itself.
+    An attempt to do this will generate an EPERM result value.
+
