@@ -1,0 +1,12 @@
+#!/bin/bash
+# fetch-moto-schematics - copy images from things/willow/images to schematics.
+# 
+motog4=192.168.43.1
+ping -c1 ${motog4} >/dev/null
+if [ $? -ne 0 ]
+then
+  echo "enable Moto G4 hotspot"
+  exit 1
+fi
+
+rsync -av -e'ssh -p2222' ${motog4}:/storage/858C-1B17/things/willow/images/ schematics
