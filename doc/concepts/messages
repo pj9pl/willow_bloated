@@ -41,23 +41,19 @@
 
   The send_OPCODE() macros in msg.h map each opcode to the correct arguments.
 
-  Messages are inserted into a fifo buffer so that they are processed in the
-  order in which they occur. The main loop extracts each message from the fifo
-  and delivers it to the destination via its receive function.
+  Messages are inserted into a common fifo buffer so that they are processed in
+  the order in which they occur. The main loop extracts each message from the
+  fifo and delivers it to the destination via its receive function.
 
   The fifo is bounded and deemed reliable, in that an internal message must
   not fail to be sent. This can occur if the fifo overflows, therefore the
   fifo must not overflow. A general principle is that no more than one request
   should be sent during a message cycle. There are exceptions to this, but if
   each task were to send multiple requests during each message cycle, the fifo
-  would soon overflow. The single request principle makes it easier to predict
-  what reply can be expected: if two requests are sent, two replies are to be
-  expected, with the added complexity of differentiation. Where two requests
-  are deemed necessary, perhaps the algorithm should be reconsidered.
+  would soon overflow.
 
-  In addition to the single request, a reply may also be sent, as in the case
-  where one job is completed and the next job in the queue is started. This is
-  normal protocol and allowance has to be made in the size of the fifo.
+  In addition to the single request, a reply may also be sent. This is the case
+  where one job is has been completed and the next job in the queue is started.
 
 
   Requests and Replies.
@@ -80,8 +76,9 @@
 
   External Messages
 
-  External messages are carried by the TWI between connected hosts. These may
-  vary in length, and may fail to be sent.
+  External messages are carried by the TWI between connected hosts.
+  The different types of requests and replies are of various lengths and may
+  fail to be sent.
 
   The delivery status is sent in the internal reply to the TWI client, enabling
   the client to resume. The MT|MR mode provides data in the same transaction,
@@ -108,28 +105,24 @@
   Peer exchange.
 
     Many hosts provide services that accept a request and send a reply at some
-    later time. To facilitate this operation, the client provides a five byte
-    administrative prologue that the server can use to ensure that the reply
-    is sent to the correct client.
-
+    later time. To ensure that the reply is delivered to the originating task,
+    the task ID, jobref and host address of the client are included after the
+    service code. This serves to distinguish between two clients waiting for a
+    reply from the same service provider.
     -------------------------------------------------S
     | service | taskid |     jobref     |  haddr |  ...   
     -------------------------------------------------S
 
-    There are two parties to the exchange: the client and the server.
-
-    The client sends a request and receives a reply. This is accomplished
-    within a single MTSR message.
+    The client sends a request and receives a reply using an MTSR message.
 
     The server receives a request and sends a reply. This is accomplished
-    using two separate messages: an SR message to receive the request and
-    an MT message to send the reply. The transaction is actually an SRMT
-    sequence, the operation being initiated by the reception of a request
-    and completed by the transmission of the reply. The SR message specifies
-    the taskid as ANY in order to receive from any task, and in the reply it
-    specifies the taskid and jobref tht the client provided in the request
-    so that the reply is delivered to the correct client.
+    with two separate messages: an SR to receive the request and an MT to
+    send the reply. The SR message specifies the taskid as ANY in order to
+    receive from any task, and in the reply it specifies the taskid and jobref
+    of the client provided in the request so that the reply is delivered to the
+    correct client. The haddr is the sender's host address, so the reply from
+    the service provider contains the service provider's address in the haddr
+    field.
 
-    The FSU, FSD, and RWR secretaries provide numerous examples of this
-    exchange.
+    The FSU, FSD, and RWR secretaries provide examples of this type of exchange.
 

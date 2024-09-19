@@ -1,7 +1,14 @@
 
   BLUETOOTH
 
+  The Bluetooth Terminal Android application, also known as 
+  bluetooth-spp-terminal, available from F-Droid, github and GitFlic,
+  written by Sash0k, can be used to connect to the HC-05 adapters.
+  There have been no problems encountered when using this application.
+
   --------------------------------------------------------------------------
+  Linux.
+
   BlueZ 5 compatibility fix:-
   As root,
   1. Edit /etc/systemd/system/dbus-org.bluez.service to add --compat to the
@@ -120,11 +127,11 @@
 
   p.s.
     For some unknown reason, the Acer Chromebook (camel) has changed its
-    behavior. The connection needs pairing each time after Zara is switched
-    off. It didn't do this previously.
+    behavior since the Raspberry Pi was introduced into the equation. The
+    connection now needs pairing each time after Zara is switched off.
+    It didn't do this previously.
 
-    The RPi is worse, in that it does not connect between the Belkin USB
-    Bluetooth dongle and a HC-05 adapter.
+    The Raspberry Pi is even worse, in that it does not connect between the
+    Belkin USB Bluetooth dongle and a HC-05 adapter.
 
     The Acer Chromebook problems started after playing with the RPi.
-    Coincidence or causal link?

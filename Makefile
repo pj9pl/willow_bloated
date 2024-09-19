@@ -1,4 +1,4 @@
-# toplevel Makefile
+# Makefile for willow
 
 # Copyright (c) 2024, Peter Welch
 # All rights reserved.
@@ -115,7 +115,6 @@ listing:
                 pisa/inp.c \
                 pisa/sysinit.c \
                 sumo/README* \
-                sumo/defs.sh \
                 sumo/Makefile \
                 sumo/host.h \
                 sumo/main.c \

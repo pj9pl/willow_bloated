@@ -127,7 +127,7 @@ typedef struct {
 typedef struct {
     ProcNumber taskid;
     jobref_t jobref;
-    uchar_t sender_addr;
+    hostid_t sender_addr;
     uchar_t op;
     union {
         mknod_request mknod;
@@ -145,7 +145,7 @@ typedef struct {
 typedef struct {
     ProcNumber taskid;
     jobref_t jobref;
-    uchar_t sender_addr;
+    hostid_t sender_addr;
     uchar_t result;
     union {
         readf_reply readf;

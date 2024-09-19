@@ -2,9 +2,9 @@
   FIDO
 
   Fido is a host at i2c address 0x40,0x41 (64,65 decimal).
-  It manages a number of iterative clients.
+  It manages a number of iterative process directors.
 
-  It manages the RV-3028-C7 RTC.
+  It manages the RV-3028-C7 real time clock.
   To adjust the RTC:-
 
     1. In the AUX terminal (lower left):-

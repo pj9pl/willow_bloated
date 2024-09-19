@@ -17,7 +17,7 @@ q : generate external reset
 
 999W : generate a watchdog reset
 
------------------------- CLI commands ---------------------------
+------------------------ CLI mode --------------------------------
 
 alba <path>        ---------  load alba config file <path>
 

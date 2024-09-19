@@ -3,8 +3,9 @@
 
   Iowa is a host at i2c address 0x3A,0x3B (58,59 decimal).
   It provides the file system utilities LS MK MV PWD RM via the FSU secretary.
+  It also provides a secondary interface to the outside world with which the
+  primary interface can be reprogrammed using in-circuit serial programming.
 
-  It is situated on a board previously occupied by jira, and has an HC-05
-  socket and an 11.06 MHz ceramic resonator.
+  It has an HC-05 bluetooth and an 11.06 MHz ceramic resonator.
 
   Olaf Rempel's Twiboot v3.2 is hardcoded with address 0x3A.

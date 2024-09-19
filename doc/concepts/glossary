@@ -7,6 +7,9 @@
 
   internal message - an 8-byte internal communication.
 
+  external message - a message between two or more hosts via the two wire
+                     interface.
+
   process - an end-to-end cooperation of tasks governed by a director.
 
   director - a task that governs a process.

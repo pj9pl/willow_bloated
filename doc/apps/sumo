@@ -4,3 +4,4 @@
   Sumo is a host at i2c address 0x38.0x39 (56,57 decimal).
   It manages a parallel 2x16 LCD display.
 
+  Olaf Rempel's Twiboot v3.2 is hardcoded with address 0x38.

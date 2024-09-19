@@ -1,13 +1,13 @@
 
   FSD
 
-  The FSD task is a network secretary that receives an FS_REQUEST message
+  The FSD task is a network secretary that receives an FSD_REQUEST message
   and sends an FSD_REPLY to the host:task:job that sent the request.
 
   It provides mutually exclusive access to the sd_admin sector buffer.
 
-  The FS_REQUEST specifies an operation with various parameters.
-  The FS_REPLY specifies a result code with various parameters.
+  The FSD_REQUEST specifies an operation with various parameters.
+  The FSD_REPLY specifies a result code with various parameters.
 
   The operations are:-
 
@@ -16,90 +16,94 @@
         request
             <none>
         reply
-            <none>
+            uchar_t result;
 
     OP_SECTOR - Read a sector from the partition into the sd_admin buffer.
         request
-            ushort_t num; /* sector number within the partition */
+            ushort_t num;    - sector number within the partition
         reply
-            <none>
+            uchar_t result;
 
-    OP_IFETCH - Transfer an inode to a remote location.
+    OP_IFETCH - Fetch an inode
         request
-            ushort_t inum;
-            d_inode *ip;
+            inum_t inum;     - inode number
+            d_inode *ip;     - inode buffer address
         reply
-            <none>
+            uchar_t result;
 
-    OP_READ - Transfer part of a file to a remote location.
+    OP_READ - Read a file fragment.
         request
-            ushort_t inum;
-            void *dst;
-            unsigned use_cache : 1;
-            uchar_t whence;
-            long offset;
-            ushort_t len;
+            inum_t inum;     - inode number
+            void *dst;       - data buffer address
+            unsigned use_cache : 1; - use the prevailing inode
+            uchar_t whence;  - offset modifier: SEEK_SET,SEEK_END 
+            off_t offset;    - file offset from whence
+            ushort_t len;    - number of bytes requested
         reply
-            long file_posn;  /* the next unread location */
-            ushort_t nbytes;  /* number of bytes delivered */
+            uchar_t result;
+            off_t file_posn; - the next unread location
+            ushort_t nbytes; - number of bytes delivered
 
     OP_MKNOD - Create a file or make a directory of a specified maximum size.
         request
-            char *src;
-            ushort_t len;
-            ushort_t nzones;
-            uchar_t mode;
-            ushort_t cwd;
+            char *src;       - pathname to be created 
+            ushort_t len;    - length of pathname
+            zone_nr nzones;  - number of zones to allocate
+            uchar_t mode;    - file mode
+            inum_t cwd;      - current working directory
         reply
-            <none>
+            uchar_t result;
 
-    OP_BUFFER_ADDRESS - Fetch the local address of the sd_admin buffer.
+    OP_BUFFER_ADDRESS - Fetch the address of the sd_admin buffer.
         request
             <none>
         reply
-            uchar_t *bufp; /* address of the sd_admin sector buffer */
+            uchar_t result;
+            uchar_t *bufp;   - address of the sd_admin sector buffer
 
-    OP_IWRITE - Transfer an inode from a remote location to the inode table. 
+    OP_IWRITE - Write an inode. 
         request
-            ushort_t inum;
-            d_inode *ip;
+            inum_t inum;     - number of inode to be written
+            d_inode *ip;     - inode buffer address
         reply
-            <none>
+            uchar_t result;
 
     OP_LINK - Create a directory item in 'parent' named 'src' with inum 'inum'.
         request
-            char *src;
-            ushort_t len;
-            ushort_t inum;
-            ushort_t parent;
+            char *src;       - name of the new item
+            ushort_t len;    - length of the name
+            inum_t inum;     - inode number to be assigned
+            inum_t parent;   - parent directory
         reply
-            <none>
+            uchar_t result;
 
     OP_UNLINK - Remove a directory item in 'parent' named 'src'.
                 If the link count reaches zero, free the zones and the inode.
         request
-            char *src;
-            ushort_t len;
-            ushort_t parent;
+            char *src;       - name of the item to unlink
+            ushort_t len;    - length of the name
+            inum_t parent;   - parent directory
         reply
-            <none>
+            uchar_t result;
 
     OP_PATH - Resolve the name 'path' to an inode number 'inum' optionally
-              fetching the inode.
+              fetching the inode, if the buffer pointer is not NULL.
         request
-            char *path;
-            ushort_t len;
-            ushort_t cwd;
-            d_inode *ip;
+            char *path;      - path of the item to resolve
+            ushort_t len;    - length of the path
+            inum_t cwd;      - directory that the path is relative to
+            inode_t *ip;     - client inode buffer, NULL to ignore
         reply
-            ushort_t p_inum;
+            uchar_t result;
+            inum_t p_inum;   - resolved inode number of the path
 
     OP_INDIR - Search a directory for an item with inode number 'inum', fetch
                the name and the index within the directory.
         request
-            char *bp;        /* client memory address to receive the basename */
-            ushort_t b_inum; /* inode number of basename */
-            ushort_t d_inum; /* inode number of parent directory */
+            char *bp;        - client memory address to receive the basename
+            inum_t b_inum;   - inode number of basename
+            inum_t d_inum;   - inode number of parent directory
         reply
-            ushort_t d_idx;
+            uchar_t result;
+            ushort_t d_idx;  - directory index of the item
 

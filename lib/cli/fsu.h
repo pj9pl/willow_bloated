@@ -102,7 +102,6 @@ typedef union {
 
 #else /* _MAIN_ */
 
-PUBLIC void config_fsu(void);
 PUBLIC uchar_t receive_fsu(message *m_ptr);
 
 #endif /* _MAIN_ */

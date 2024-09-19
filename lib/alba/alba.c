@@ -175,8 +175,8 @@ PUBLIC void config_alba(void)
      * so that they continue to generate a high level when
      * they are reconfigured as outputs.
      *
-     * MISO/RDY remains configured as an input and needs an
-     * actual pullup as the pin will float when the AD7124 is
+     * MISO/RDY remains configured as an input and needs a
+     * soft pullup as the pin will float when the AD7124 is
      * deselected.
      *
      * MOSI and SCK don't warrant pullups.

@@ -13,14 +13,14 @@ as SEND, RECV, MAKE and AUX.
      --------------------
 
 These are all situated in the bali working directory and have exported $tmpdir,
-$port, $PORT and $logfileprefix to the environment by executing:-
+$port, $PORT and $logfileprefix to their environment by executing:-
 
      . ./defs.sh
 
-Bali's green button activates the HC-05 Bluetooth adapter for 30 seconds.
-This is only necessary when the maintenance switch is in the normal position.
-When the switch is in the maintenance position (closed) the HC-05 is activated
-by default.
+Bali's green button activates the HC-05 Bluetooth adapter into pairing mode
+for 30 seconds. During this period, establish a connection by whatever means
+your Bluetooth manager provides.
+
 
 In the SEND terminal execute:-
 

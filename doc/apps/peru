@@ -2,5 +2,6 @@
   PERU
 
   Peru is a host at i2c address 0x3E,0x3F (62,63 decimal).
-  It manages an SPI OLED display.
+  It provides display services via an SPI OLED screen.
 
+  Olaf Rempel's Twiboot v3.2 is hardcoded with address 0x3E.

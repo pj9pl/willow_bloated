@@ -17,3 +17,13 @@
 
   It has a serial bootloader with the baudrate at 115200.
   The High Fuse Byte is programmed to 0xDA for a 2k bootsize from 0x7800.
+
+  It provides the primary interface to the outside world via a HC-05 Bluetooth
+  interface that accepts lines of text, either as commands or structured data.
+
+  It is used to reprogram the internal devices, either with in-system
+  programming using avril(1), or with in-circuit serial programming using
+  avp(1). It cannot reprogram itself, avrdude(1) being used to reprogram the
+  application part, and the secondary interface provided by iowa being used
+  to reprogram the bootloader using in-circuit serial programming.
+

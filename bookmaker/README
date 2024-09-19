@@ -1,0 +1,3 @@
+The directories contain the Makefiles to format datasheets as
+A5 books and print on a Hewlett Packard Laserjet 1100 using gv(1).
+

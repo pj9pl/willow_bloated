@@ -7,7 +7,7 @@ It hosts TPLOG which periodicly reads a BMP180 and logs the measurements.
 
 It hosts KEYPAD which manages a group of 8 touch switches.
 
-It hosts RTC which manages the RV-3027-C7 utilities and admin.
+It hosts RTC which manages the RV-3028-C7 utilities and admin.
 
 It is connected to other hosts via the TWI.
 There is no HC-05 serial interface.

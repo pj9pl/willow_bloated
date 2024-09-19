@@ -48,7 +48,7 @@ r : print the EEOFFSET value
 
 0S : TEMPEST output OFF
 1S : TEMPEST send output to SUMO
-2S : TEMPEST send output to JIRA
+2S : TEMPEST send output to LIMA
 3S : TEMPEST send output to PERU
 7S : TEMPEST send output to GCALL
 
@@ -57,7 +57,7 @@ r : print the EEOFFSET value
 
 0T : TIMZ output OFF
 1T : TIMZ send output to SUMO
-2T : TIMZ send output to JIRA
+2T : TIMZ send output to LIMA
 3T : TIMZ send output to PERU
 7T : TIMZ send output to GCALL
 
@@ -71,9 +71,9 @@ r : print the EEOFFSET value
 
 0V : VITZ output OFF
 1V : VITZ send output to SUMO
-2V : VITZ send output to JIRA
+2V : VITZ send output to LIMA
 3V : VITZ send output to PERU
-4V : VITZ send output to GCALL
+7V : VITZ send output to GCALL
 
 0z : TTY output to local SER
 1z : TTY output to GATEWAY OSTREAM

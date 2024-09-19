@@ -3,10 +3,15 @@
 
   Oslo is a host at i2c address 0x34,0x35 (52,53 decimal).
 
-  It manages an SD-HC card, a 32768 crystal and a voltage input
-  on ADC channel 0. The attenuator feeding ADC0 divides by 6.75,
-  which is approximately -16.5 dB.
+  It manages an SD-HC card, a 32768 Hz watch crystal and a voltage
+  input on ADC channel 0. The attenuator feeding ADC0 divides by 6.75,
+  which corresponds to a maximum voltage of 22 volts.
 
   It uses the internal 8MHz clock.
   The low fuse is programmed to 0xE2.
+
+  There are two 512 byte buffers permanently allocated within the SRAM,
+  named admin and datum. The FSD task always uses the admin buffer and
+  the RWR task always uses the datum buffer. This is to allow a write
+  request to be serviced whilst a read request is underway.
 

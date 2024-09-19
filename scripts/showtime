@@ -14,7 +14,7 @@ class Showtime {
         while (1) {
             $now = time();
             if ($prev != $now) {
-                echo "now\n";
+                echo "date\n";
                 $prev = $now;
             }
         }

@@ -9,4 +9,5 @@ then
   exit 1
 fi
 
-rsync -av -e'ssh -p2222' ${motog4}:/storage/858C-1B17/things/willow/images/ schematics
+rsync -av -e'ssh -p2222' ${motog4}:/storage/858C-1B17/things/willow/images/ \
+      schematics
