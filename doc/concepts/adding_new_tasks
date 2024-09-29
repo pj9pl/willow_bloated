@@ -1,39 +1,49 @@
 
   ADDING NEW TASKS
 
-  Adding another task to a host requires modifications to
-     Makefile
+  Adding another task, e.g. istream.c to a host requires modifications to:-
 
-        ...
-        istream.o \
-        ...
+   -  Makefile
+        LIB_OBJS = msg.o \
+                   ...
+                   istream.o \
+                   ...
 
-     main.c
+   -  main.c
 
         ...
         #include "net/istream.h"
         ...
-        [ISTREAM] = process_istream,
-        ...
-        config_istream();
-        ...
-
-     host.h
-
-        ...
-        ISTREAM,
+        static const MsgProc __flash proctab[] = {
+            ...
+            [ISTREAM] = receive_istream,
+            ...
+        };
         ...
 
-
-  If the task requires dynamic initialization
-     sysinit.c
+   -  host.h
 
         ...
-        ISTREAM,
+        typedef enum {
+            ...
+            ISTREAM,
+            ...
+        } __attribute__ ((packed)) ProcNumber;
         ...
 
-  will also need
-  to be modified. If it needs control input inp.c may need to be modified.
+  istream.c is a network secretary which requires dynamic initialization:-
+
+   -  sysinit.c
+
+        ...
+        static const ProcNumber __flash inittab[] = {
+            ...
+            ISTREAM,
+            ...
+        };
+        ...
+
+  If it needs control input inp.c may need to be modified.
 
   If the task declares a pre-start init function this should be called from
   within main.c in the pre-start init section.

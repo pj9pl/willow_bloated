@@ -1,4 +1,4 @@
-# Makefile for bali
+# bali/Makefile
 
 # Copyright (c) 2024 Peter Welch
 # All rights reserved.
@@ -112,7 +112,7 @@ DUDEREADFLAGS = -D -v -v -v $(PARTNUMBER) $(PROGRAMMER) $(BAUDRATE) $(PORT) \
 # nothing should require adjustment beyond here.
 #=============================================================================
 
-CC = $(TOOLS)/avr-gcc
+CC = avr-gcc
 CFLAGS = -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU) -Wall -Wextra -I. $(CXXFLAGS)
 LD = avr-gcc
 LDFLAGS = -DF_CPU=$(F_CPU) -mmcu=$(MCU)

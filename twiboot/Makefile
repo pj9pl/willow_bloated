@@ -1,4 +1,4 @@
-# Makefile for the twi bootloader.
+# twiboot/Makefile
 
 # Copyright (c) 2024 Peter Welch
 # All rights reserved.

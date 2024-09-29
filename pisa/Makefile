@@ -1,4 +1,4 @@
-# Makefile for pisa
+# pisa/Makefile
 
 # Copyright (c) 2024 Peter Welch
 # All rights reserved.

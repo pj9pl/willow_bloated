@@ -80,20 +80,20 @@ PRIVATE void resume(void);
  */ 
 PUBLIC void config_sysinit(void)
 {
-    /* There are no unused pins on sumo.
+    /* There are five unused pins on sumo.
 
                          -------U-------
              EXT_RST -> -|RESET      C5|- <-> TWI_SCL
-             HC05_TX -> -|D0         C4|- <-> TWI_SDA
-             HC05_RX <- -|D1         C3|- -> PLCD_BACKLIGHT
+                    n/c -|D0         C4|- <-> TWI_SDA
+                    n/c -|D1         C3|- -> PLCD_BACKLIGHT
           PLCD_POWER <- -|D2         C2|- -> PLCD_E
-         HC05_STATUS -> -|D3         C1|- -> PLCD_RW
-         HC05_WAKEUP -> -|D4         C0|- -> PLCD_RS
+                    n/c -|D3         C1|- -> PLCD_RW
+                    n/c -|D4         C0|- -> PLCD_RS
                         -|VCC       GND|-
                         -|GND      AREF|-
             PLCD_D6 <-> -|B6       AVCC|-
             PLCD_D7 <-> -|B7         B5|- <-> PLCD_D5
-         HC05_ENABLE <- -|D5         B4|- <-> PLCD_D4
+                    n/c -|D5         B4|- <-> PLCD_D4
    BOOTLOADER_SWITCH -> -|D6         B3|- <-> PLCD_D3
              EXT_RST <- -|D7         B2|- <-> PLCD_D2
             PLCD_D0 <-> -|B0         B1|- <-> PLCD_D1
@@ -102,6 +102,9 @@ PUBLIC void config_sysinit(void)
 
     /* enable pullup on bootloader switch */
     BL_PORT |= _BV(BL);
+
+    PORTD |= _BV(PORTD5) | _BV(PORTD4) |
+             _BV(PORTD3) | _BV(PORTD1) | _BV(PORTD0);
 
     /* Disable all peripherals.
      * They are subsequently enabled by the drivers that use them.

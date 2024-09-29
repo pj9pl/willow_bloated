@@ -34,6 +34,7 @@
     -  git reset         - reset current additions
 
     -  git undo          - remove the previous commit, leaving tree undisturbed
+                           not available with RPi git version 2.30.2
 
     -  git -D branch-name   - force the removal of a branch
 

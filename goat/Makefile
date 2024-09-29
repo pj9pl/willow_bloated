@@ -1,4 +1,4 @@
-# Makefile for goat
+# goat/Makefile
 
 # Copyright (c) 2024 Peter Welch
 # All rights reserved.

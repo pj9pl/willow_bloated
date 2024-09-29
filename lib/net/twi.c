@@ -444,7 +444,7 @@ PRIVATE void start_job(void)
             }
         } else {
             /* Preserve the client values to allow
-             * the transfer to be restarted if need be.
+             * the transfer to be reattempted if need be.
              */
             this.tptr = this.headp->tptr;
             this.tcnt = this.headp->tcnt;

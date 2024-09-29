@@ -15,8 +15,9 @@
 
   It has an ICSP output in addition to an ICSP input.
 
-  It has a serial bootloader with the baudrate at 115200.
-  The High Fuse Byte is programmed to 0xDA for a 2k bootsize from 0x7800.
+  It has a modified version of the optiboot serial bootloader with the baudrate
+  hard coded to 115200. The High Fuse Byte is programmed to 0xDE for a 512 byte
+  bootsize from 0x7E00.
 
   It provides the primary interface to the outside world via a HC-05 Bluetooth
   interface that accepts lines of text, either as commands or structured data.

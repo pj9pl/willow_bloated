@@ -38,6 +38,8 @@
  *       rm -rf directory [...]
  *       rm -fr directory [...]
  *       rmdir directory [...]
+ *
+ * n.b. the -r and -f options are not yet fully implemented.
  */
  
 #include <string.h>

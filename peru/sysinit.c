@@ -77,7 +77,7 @@ PRIVATE void resume(void);
 
 PUBLIC void config_sysinit(void)
 {
-    /* There are 12 unused pins on peru.
+    /* There are 13 unused pins on peru.
 
                          -------U-------
              EXT_RST -> -|RESET      C5|- <-> TWI_SCL

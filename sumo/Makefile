@@ -1,4 +1,4 @@
-# Makefile for sumo
+# sumo/Makefile
 
 # Copyright (c) 2024 Peter Welch
 # All rights reserved.

@@ -32,7 +32,7 @@
 /* An INP secretary.
  * 
  * This waits for an ISTREAM_REQUEST message to arrive via the TWI
- * It then fetches a string from the remote elient using MEMZ and
+ * It then fetches a string from the remote client using MEMZ and
  * sends a NOT_EMPTY message to the INP task which reads each character
  * in the buffer until it is empty. When the last character is removed
  * from the buffer, an ISTREAM_REPLY is sent to the remote client.
