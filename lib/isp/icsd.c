@@ -242,9 +242,8 @@ ISR(SPI_STC_vect)
             break;
 
         case READ_PROGRAM_MEMORY:
-            if (this.headp->bcnt) {
-                this.headp->bcnt--;
-                *(this.headp->bp)++ = this.headp->rxbuf[3];
+            *(this.headp->bp)++ = this.headp->rxbuf[3];
+            if (--this.headp->bcnt) {
                 this.headp->tcnt = ICSD_BUFLEN -1;
                 this.headp->rcnt = 0;
                 if (isodd(this.headp->bcnt)) {
@@ -261,9 +260,8 @@ ISR(SPI_STC_vect)
             break;
 
         case READ_EEPROM_MEMORY:
-            if (this.headp->bcnt) {
-                this.headp->bcnt--;
-                *(this.headp->bp)++ = this.headp->rxbuf[3];
+            *(this.headp->bp)++ = this.headp->rxbuf[3];
+            if (--this.headp->bcnt) {
                 this.headp->tcnt = ICSD_BUFLEN -1;
                 this.headp->rcnt = 0;
                 this.headp->waddr++;
